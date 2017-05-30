@@ -54,6 +54,9 @@ public:
 	// contructs the final email
 	void constructEmail();
 
+	// clears the contents of the email
+	void clearEmailContents();
+
 	// void send email
 	int send() const; // returns a CURL error code
 

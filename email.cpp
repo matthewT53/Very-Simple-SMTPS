@@ -1,14 +1,15 @@
 /*
-	Implementation of the email class
+	Implementation of the SMTPS email class
 	Written by Matthew Ta
 */
 
 #include <iostream>
 #include <ctime>
 
+#include "stdafx.h"
 #include "email.h"
 
-#define MAX_LEN 255
+#define MAX_LEN 255 // this must be divisible by 3 otherwise the SMTP server won't be able to decode the attachment properly
 #define ENCODED_LEN 341
 
 // offsets into the email template 
@@ -140,7 +141,8 @@ void Email::addAttachment(const string file_path)
 		this->attachments.push_back(deposition);
 
 		// push the filename
-		snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", file_path.c_str());
+		snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", strrchr(file_path.c_str(), '\\') + 1);
+		
 		string filename(tempBuffer);
 		this->attachments.push_back(filename);
 
@@ -172,7 +174,7 @@ void Email::addAttachment(const string file_path)
 
 			this->attachments.push_back(line);
 
-			// modify the file pointer
+			// update the number of bytes we have copied
 			bytesCopied += bytesToCopy;
 		}
 
@@ -219,8 +221,7 @@ void Email::constructEmail(void)
 	snprintf(buffer, MAX_LEN, "Cc: %s\r\n", this->cc.c_str());
 	string line3(buffer);
 
-	cout << "Length: " << line3.length() << endl;
-	if (line3.length() > 6) {
+	if (this->cc.length() > 0) {
 		this->email_contents.push_back(line3);
 	}
 
@@ -345,7 +346,7 @@ int Email::send(void) const
 		/* Since the traffic will be encrypted, it is very useful to turn on debug
 		* information within libcurl to see what is happening during the
 		* transfer */
-		curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+		// curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
 
 		/* Send the message */
 		res = curl_easy_perform(curl);
@@ -367,6 +368,12 @@ int Email::send(void) const
 
 void Email::removeAllAttachments()
 {
+	this->attachments.clear();
+}
+
+void Email::clearEmailContents()
+{
+	this->email_contents.clear();
 	this->attachments.clear();
 }
 
