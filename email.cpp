@@ -199,6 +199,7 @@ void Email::addAttachment(const string file_path)
 		}
 
 		else{
+			removeAllAttachments();
 			cout << "Failed to extract filename!" << endl;
 		}
 
