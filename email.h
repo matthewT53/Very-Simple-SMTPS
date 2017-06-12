@@ -12,6 +12,10 @@
 
 #include "curl/curl.h"
 
+// Enable one of the below depending on your operating system
+// #define WINDOW_H
+#define LINUX_H
+
 class Email
 {
 public:
@@ -42,11 +46,11 @@ public:
 	// sets the SMTP HOST
 	void setSMTP_host(const std::string host);
 
-	// adds an attachment to the email
-	void addAttachment(const std::string filename);
+	// adds a binary attachment to the email
+	void addAttachment(const std::string filepath);
 
-	// removes an attachment from the email
-	void removeAttachment(const std::string filename);
+	// removes an attachment from the email (Not implemented yet)
+	void removeAttachment(const std::string filepath);
 
 	// removes all attachments
 	void removeAllAttachments();

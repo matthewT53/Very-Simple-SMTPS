@@ -5,8 +5,9 @@
 
 #include <iostream>
 #include <ctime>
+#include <string.h>
 
-#include "stdafx.h"
+// #include "stdafx.h"
 #include "email.h"
 
 #define MAX_LEN 255 // this must be divisible by 3 otherwise the SMTP server won't be able to decode the attachment properly
@@ -20,6 +21,12 @@
 #define ATTACH_DEPOSITION 12
 #define END_OF_TRANSMISSION_BOUNDARY 15
 #define END_OF_TRANSMISSION 16
+
+#ifdef WINDOWS_H
+	#define DIR_CHAR '\\'
+#else
+	#define DIR_CHAR '/'
+#endif
 
 using namespace std;
 
@@ -118,6 +125,7 @@ void Email::addAttachment(const string file_path)
 	char buffer[MAX_LEN + 1] = { 0 };
 	char encodedBuffer[ENCODED_LEN] = { 0 };
 	char tempBuffer[MAX_LEN] = { 0 };
+	char *filename = NULL;
 	unsigned int fileSize = 0;
 	unsigned int bytesCopied = 0;
 	int bytesToCopy = 0;
@@ -140,8 +148,19 @@ void Email::addAttachment(const string file_path)
 		string deposition(email_template[ATTACH_DEPOSITION]);
 		this->attachments.push_back(deposition);
 
+		// extract the filename from the path
+		filename = (char *) strrchr(file_path.c_str(), DIR_CHAR);
+
+		if (filename != NULL){
+			filename += 1;
+		}
+
+		else{
+			cout << "Failed to extract filename!" << endl;
+		}
+
 		// push the filename
-		snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", strrchr(file_path.c_str(), '\\') + 1);
+		snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", filename);
 		
 		string filename(tempBuffer);
 		this->attachments.push_back(filename);
