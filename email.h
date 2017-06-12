@@ -13,7 +13,7 @@
 #include "curl/curl.h"
 
 // Enable one of the below depending on your operating system
-// #define WINDOW_H
+// #define WINDOWS_H
 #define LINUX_H
 
 class Email
