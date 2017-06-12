@@ -153,57 +153,56 @@ void Email::addAttachment(const string file_path)
 
 		if (filename != NULL){
 			filename += 1;
+			// push the filename
+			snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", filename);
+		
+			string filename(tempBuffer);
+			this->attachments.push_back(filename);
+
+			string endLine(email_template[END_LINE]);
+			this->attachments.push_back(endLine);
+
+			// copy the file MAX_LEN bytes at a time into the attachments vector
+			while (bytesCopied < fileSize) {
+				// determine how many bytes to read
+				if (bytesCopied + MAX_LEN > fileSize) {
+					bytesToCopy = fileSize - bytesCopied;
+				}
+
+				else {
+					bytesToCopy = MAX_LEN;
+				}
+
+				// read from the file
+				memset(buffer, 0, MAX_LEN + 1);
+				bytesRead = fread(buffer, sizeof(char), bytesToCopy, fp);
+
+				// encoded the data read
+				memset(encodedBuffer, 0, ENCODED_LEN);
+				base64_encode(buffer, encodedBuffer, bytesRead);
+	
+				// setup the encoded string so that we can push it to attachments
+				string line(encodedBuffer);
+				line += endLine;
+
+				this->attachments.push_back(line);
+
+				// update the number of bytes we have copied
+				bytesCopied += bytesToCopy;
+			}
+
+			this->attachments.push_back(endLine);
+
+			string boundary(email_template[BOUNDARY]);
+			this->attachments.push_back(boundary);
+
 		}
 
 		else{
 			cout << "Failed to extract filename!" << endl;
 		}
 
-		// push the filename
-		snprintf(tempBuffer, MAX_LEN, "  filename=\"%s\"\r\n", filename);
 		
-		string filename(tempBuffer);
-		this->attachments.push_back(filename);
-
-		string endLine(email_template[END_LINE]);
-		this->attachments.push_back(endLine);
-
-		// copy the file MAX_LEN bytes at a time into the attachments vector
-		while (bytesCopied < fileSize) {
-			// determine how many bytes to read
-			if (bytesCopied + MAX_LEN > fileSize) {
-				bytesToCopy = fileSize - bytesCopied;
-			}
-
-			else {
-				bytesToCopy = MAX_LEN;
-			}
-
-			// read from the file
-			memset(buffer, 0, MAX_LEN + 1);
-			bytesRead = fread(buffer, sizeof(char), bytesToCopy, fp);
-
-			// encoded the data read
-			memset(encodedBuffer, 0, ENCODED_LEN);
-			base64_encode(buffer, encodedBuffer, bytesRead);
-	
-			// setup the encoded string so that we can push it to attachments
-			string line(encodedBuffer);
-			line += endLine;
-
-			this->attachments.push_back(line);
-
-			// update the number of bytes we have copied
-			bytesCopied += bytesToCopy;
-		}
-
-		cout << "FileSize = " << fileSize << " BytesCopied: " << bytesCopied << endl;
-
-		this->attachments.push_back(endLine);
-
-		string boundary(email_template[BOUNDARY]);
-		this->attachments.push_back(boundary);
-
 		// close the file
 		fclose(fp);
 	}
