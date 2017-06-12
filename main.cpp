@@ -20,12 +20,10 @@ int main(void)
 	e.setBody("Do not reply to this email");
 
 	e.setSMTP_host("smtps://smtp.gmail.com:465");
-	e.setSMTP_username("LiverpoolTest45@gmail.com");
-	e.setSMTP_password("<Your password here>");
+	e.setSMTP_username("a.taylor9358@gmail.com");
+	e.setSMTP_password("adamflag543");
 
-	e.addAttachment("/home/matthew/Git Projects/Very-Simple-SMTPS/email.cpp");
-	// e.addAttachment("email.h");
-	// e.addAttachment("main.cpp");
+	e.addAttachment("/mnt/d/Projects/Very-Simple-SMTPS/email.h");
 
 	e.constructEmail();
 	e.dump();
