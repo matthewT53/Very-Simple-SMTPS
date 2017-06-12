@@ -21,18 +21,24 @@ int main(void)
 
 	e.setSMTP_host("smtps://smtp.gmail.com:465");
 	e.setSMTP_username("LiverpoolTest45@gmail.com");
-	e.setSMTP_password("");
+	e.setSMTP_password("<Your password here>");
 
-	e.addAttachment("test.dxf");
-	e.addAttachment("test2.dxf");
-	e.addAttachment("GTR35.dxf");
+	e.addAttachment("/home/matthew/Git Projects/Very-Simple-SMTPS/email.cpp");
+	// e.addAttachment("email.h");
+	// e.addAttachment("main.cpp");
 
 	e.constructEmail();
 	e.dump();
 
 	curlError = e.send();
 
-	cout << "Curl error: " << curlError << endl;
+	if (curlError){
+		cout << "Error sending email!" << endl;
+	}
+
+	else{
+		cout << "Email sent successfully!" << endl;
+	}
 
 	return 0;
 }
