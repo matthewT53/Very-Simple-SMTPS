@@ -292,6 +292,10 @@ void Email::constructEmail(void)
 	this->email_contents.push_back(endTransmission);
 }
 
+/*
+	This function was taken and modified from:
+	https://curl.haxx.se/libcurl/c/smtp-ssl.html
+*/
 int Email::send(void) const
 {
 	CURL *curl;
