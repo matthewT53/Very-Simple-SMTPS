@@ -1,0 +1,1 @@
+project('smtp_library', 'cpp')
