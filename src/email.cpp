@@ -278,7 +278,7 @@ void Email::constructEmail(void)
 	this->email_contents.push_back(boundary); // boundary
 
 	// add in the attachments
-	for (i = 0; i < attachments.size(); i++){
+	for (i = 0; i < static_cast<int>( attachments.size() ); i++){
 		this->email_contents.push_back(this->attachments[i]);
 	}
 
@@ -404,7 +404,7 @@ void Email::dump(void) const
 	int i = 0;
 
 	cout << "Email contents: " << endl;
-	for (i = 0; i < this->email_contents.size(); i++) {
+	for (i = 0; i < static_cast<int>( this->email_contents.size() ); i++) {
 		cout << this->email_contents[i];
 		if (i == 20) {
 			break;
@@ -412,7 +412,7 @@ void Email::dump(void) const
 	}
 
 	cout << "\n\nEmail attachments: " << endl;
-	for (i = 0; i < this->attachments.size(); i++) {
+	for (i = 0; i < static_cast<int>( this->attachments.size() ); i++) {
 		cout << this->attachments[i];
 		if (i == 5) {
 			break;
@@ -463,7 +463,7 @@ static size_t payload_source(void *ptr, size_t size, size_t nmemb, void *userp)
 		return 0;
 	}
 
-	if (upload_ctx->lines_read >= 0 && upload_ctx->lines_read < global_vec.size())
+	if (upload_ctx->lines_read >= 0 && upload_ctx->lines_read < static_cast<int>( global_vec.size() ))
 	{
 		data = global_vec[upload_ctx->lines_read].c_str();
 
