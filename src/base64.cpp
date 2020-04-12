@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <cstdint>
+#include <algorithm>
 
 #include "base64.h"
 
@@ -13,7 +14,7 @@ static const std::string kTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrs
 static const std::string kTableUrl = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 const std::string DoBase64Encode(const std::vector<byte> &data, const std::string &table);
-const std::string DoEncodeBlock(byte arr[], const std::string &table, int padding = 0);
+const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int padding = 0);
 
 const std::string smtp::Base64::Base64_Encode(const std::vector<byte> &data)
 {
@@ -29,8 +30,8 @@ const std::string smtp::Base64::Base64_Decode(const std::vector<byte> &data)
 
 const std::string smtp::Base64::Base64Url_Encode(const std::vector<byte> &data)
 {
-    //TODO
-    std::string result;
+    std::string result = DoBase64Encode(data, kTableUrl);
+    result.erase(std::remove(result.begin(), result.end(), '='), result.end());
     return result;
 }
 
@@ -55,14 +56,14 @@ const std::string DoBase64Encode(const std::vector<byte> &data, const std::strin
 
         if (i % 3 == 0 || i == n)
         {
-            result += DoEncodeBlock(arr, table, i % 3);
+            result += DoBase64EncodeBlock(arr, table, i % 3);
         }
     }
 
     return result;
 }
 
-const std::string DoEncodeBlock(byte arr[], const std::string &table, int padding)
+const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int padding)
 {
     int i1 = (arr[0] & 0xfc) >> 2;
     int i2 = ((arr[0] & 0x3) << 4) | ((arr[1] & 0xf0) >> 4);
