@@ -16,15 +16,18 @@ static const std::string kTableUrl = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnop
 const std::string DoBase64Encode(const std::vector<byte> &data, const std::string &table);
 const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int padding = 0);
 
+const std::vector<byte> DoBase64Decode(const std::string &data, const std::string &table);
+const std::vector<byte> DoBase64DecodeBlock(byte arr[], const std::string &table);
+
 const std::string smtp::Base64::Base64_Encode(const std::vector<byte> &data)
 {
     return DoBase64Encode(data, kTable);
 }
 
-const std::string smtp::Base64::Base64_Decode(const std::vector<byte> &data)
+const std::vector<byte> smtp::Base64::Base64_Decode(const std::string &data)
 {
-    //TODO
-    std::string result;
+    //TODO: 
+    std::vector<byte> result;
     return result;
 }
 
@@ -35,10 +38,10 @@ const std::string smtp::Base64::Base64Url_Encode(const std::vector<byte> &data)
     return result;
 }
 
-const std::string smtp::Base64::Base64Url_Decode(const std::vector<byte> &data)
+const std::vector<byte> smtp::Base64::Base64Url_Decode(const std::string &data)
 {
-    //TODO
-    std::string result;
+    //TODO:
+    std::vector<byte> result;
     return result;
 }
 

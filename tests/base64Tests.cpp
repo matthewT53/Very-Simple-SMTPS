@@ -44,6 +44,14 @@ TEST( Base64EncodingTests, TypicalExampleTest )
     CHECK_EQUAL( "d2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyPw==", encoded );
 }
 
+TEST( Base64EncodingTests, BinaryDataTest )
+{
+    const std::vector<byte> data = { 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0xa };
+    const std::string encoded = smtp::Base64::Base64_Encode( data );
+
+    CHECK_EQUAL( "kJCQgHUSCg==", encoded );
+}
+
 TEST( Base64EncodingTests, EmptyStringTest )
 {
     const std::string encoded = smtp::Base64::Base64_Encode( {} );
@@ -75,6 +83,26 @@ TEST( Base64UrlEncodingTests, PaddingRemovalTest )
 TEST_GROUP( Base64DecodingTests )
 {
 };
+
+TEST( Base64DecodingTests, BasicDecodingTest )
+{
+    //TODO:
+}
+
+TEST( Base64DecodingTests, DecodePaddingTest )
+{
+    //TODO:
+}
+
+TEST( Base64DecodingTests, BinaryDataDecodeTest )
+{
+    //TODO:
+}
+
+TEST( Base64DecodingTests, EmptyStringTest )
+{
+    //TODO:
+}
 
 TEST_GROUP( Base64UrlDecodingTests )
 {
