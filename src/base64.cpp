@@ -19,26 +19,26 @@ const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int 
 const std::vector<byte> DoBase64Decode(const std::string &data, const std::string &table);
 const std::vector<byte> DoBase64DecodeBlock(byte arr[], const std::string &table);
 
-const std::string smtp::Base64::Base64_Encode(const std::vector<byte> &data)
+const std::string smtp::Base64::Base64Encode(const std::vector<byte> &data)
 {
     return DoBase64Encode(data, kTable);
 }
 
-const std::vector<byte> smtp::Base64::Base64_Decode(const std::string &data)
+const std::vector<byte> smtp::Base64::Base64Decode(const std::string &data)
 {
     //TODO: 
     std::vector<byte> result;
     return result;
 }
 
-const std::string smtp::Base64::Base64Url_Encode(const std::vector<byte> &data)
+const std::string smtp::Base64::Base64UrlEncode(const std::vector<byte> &data)
 {
     std::string result = DoBase64Encode(data, kTableUrl);
     result.erase(std::remove(result.begin(), result.end(), '='), result.end());
     return result;
 }
 
-const std::vector<byte> smtp::Base64::Base64Url_Decode(const std::string &data)
+const std::vector<byte> smtp::Base64::Base64UrlDecode(const std::string &data)
 {
     //TODO:
     std::vector<byte> result;
@@ -54,8 +54,7 @@ const std::string DoBase64Encode(const std::vector<byte> &data, const std::strin
     byte arr[3] = {0};
     for (byte b : data)
     {
-        arr[i % 3] = b;
-        i++;
+        arr[i++ % 3] = b;
 
         if (i % 3 == 0 || i == n)
         {

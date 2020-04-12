@@ -31,7 +31,7 @@
 using namespace std;
 
 // base64 encoding functions
-void base64_encode(char *input_buf, char *output_buf, size_t input_size);
+void Base64Encode(char *input_buf, char *output_buf, size_t input_size);
 void encodeblock(char *in, char *out, int len);
 
 // callback function
@@ -179,7 +179,7 @@ void Email::addAttachment(const string file_path)
 
 				// encoded the data read
 				memset(encodedBuffer, 0, ENCODED_LEN);
-				base64_encode(buffer, encodedBuffer, bytesRead);
+				Base64Encode(buffer, encodedBuffer, bytesRead);
 	
 				// setup the encoded string so that we can push it to attachments
 				string line(encodedBuffer);
@@ -420,7 +420,7 @@ void Email::dump(void) const
 	}
  }
 
-void base64_encode(char *input_buf, char *output_buf, size_t input_size)
+void Base64Encode(char *input_buf, char *output_buf, size_t input_size)
 {
 	char in[3];
 	char out[4];
