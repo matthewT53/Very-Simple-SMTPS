@@ -13,36 +13,33 @@ using byte = uint8_t;
 static const std::string kTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 static const std::string kTableUrl = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
-const std::string DoBase64Encode(const std::vector<byte> &data, const std::string &table);
-const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int padding = 0);
+const std::string DoBase64Encode( const std::vector<byte> &data, const std::string &table );
+const std::string DoBase64EncodeBlock( byte arr[], const std::string &table, int padding = 0 );
 
-const std::vector<byte> DoBase64Decode(const std::string &data, const std::string &table);
-const std::vector<byte> DoBase64DecodeBlock(byte arr[], const std::string &table);
+const std::vector<byte> DoBase64Decode( const std::string &data, const std::string &table );
+const std::vector<byte> DoBase64DecodeBlock( const std::string &data, const std::string &table, int padding = 0 );
 
-const std::string smtp::Base64::Base64Encode(const std::vector<byte> &data)
+const std::string smtp::Base64::Base64Encode( const std::vector<byte> &data )
 {
-    return DoBase64Encode(data, kTable);
+    return DoBase64Encode( data, kTable );
 }
 
 const std::vector<byte> smtp::Base64::Base64Decode(const std::string &data)
 {
-    //TODO: 
-    std::vector<byte> result;
-    return result;
+    return DoBase64Decode( data, kTable );
 }
 
 const std::string smtp::Base64::Base64UrlEncode(const std::vector<byte> &data)
 {
-    std::string result = DoBase64Encode(data, kTableUrl);
-    result.erase(std::remove(result.begin(), result.end(), '='), result.end());
+    std::string result = DoBase64Encode( data, kTableUrl );
+    result.erase(std::remove( result.begin(), result.end(), '='), result.end() );
     return result;
 }
 
 const std::vector<byte> smtp::Base64::Base64UrlDecode(const std::string &data)
 {
-    //TODO:
-    std::vector<byte> result;
-    return result;
+    //TODO: Insert padding characters back into the string
+    return DoBase64Decode( data, kTableUrl );
 }
 
 const std::string DoBase64Encode(const std::vector<byte> &data, const std::string &table)
@@ -80,6 +77,42 @@ const std::string DoBase64EncodeBlock(byte arr[], const std::string &table, int 
 
     std::fill_n(arr, 3, 0);
     return s;
+}
+
+const std::vector<byte> DoBase64Decode(const std::string &data, const std::string &table)
+{
+    std::vector<byte> result;
+
+    int i = 0;
+    int n = static_cast<int>( data.size() );
+    std::string arr(4, 0x0);
+
+    for (byte b : data)
+    {
+        arr[i++ % 4] = b;
+
+        if (i % 4 == 0)
+        {
+            const std::vector<byte> decoded = DoBase64DecodeBlock(arr, kTable, i % 4);
+            result.insert(result.end(), decoded.begin(), decoded.end());
+        }
+    }
+
+    return result;
+}
+
+const std::vector<byte> DoBase64DecodeBlock(const std::string &data, const std::string &table, int padding = 0)
+{
+    //TODO: Finish this
+    std::vector<byte> result;
+
+    byte b1 = (data[0] << 2) | ((data[1] & 0xC0) >> 6);
+    byte b2 = ((data[1] & 0x3f) << 2) | ((data[2] & 0xc0) >> 6);
+    byte b3 = (data[2] & 0x3f) | data[3];
+
+
+
+    return result;
 }
 
 }

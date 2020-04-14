@@ -132,8 +132,28 @@ TEST( Base64UrlDecodingTests, BasicDecodingTest )
 
 TEST( Base64UrlDecodingTests, DecodePaddingTest )
 {
-    //TODO:
+    const std::string data = "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGluIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYXkgc"
+                             "2lyPz8_IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQgbWUgaW4gbmV3IHlvcms_IFNlZSB5b3Ugc29vbg";
+    const std::vector<byte> result = smtp::Base64::Base64UrlDecode( data );
+    const std::string actual( result.begin(), result.end() );
+
+    CHECK_EQUAL( "What does it take for a boar to soar in New York. Are you well today sir??? Well if you are then you please visit me in new york? See you soon", actual );
 }
 
+TEST( Base64UrlDecodingTests, DecodeWithPaddingTest )
+{
+    const std::string data = "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGluIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYXkgc"
+                             "2lyPz8_IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQgbWUgaW4gbmV3IHlvcms_IFNlZSB5b3Ugc29vbg==";
+    const std::vector<byte> result = smtp::Base64::Base64UrlDecode( data );
+    const std::string actual( result.begin(), result.end() );
+
+    CHECK_EQUAL( "What does it take for a boar to soar in New York. Are you well today sir??? Well if you are then you please visit me in new york? See you soon", actual );
+}
+
+TEST( Base64UrlDecodingTests, EmptyStringTest )
+{
+    const std::vector<byte> result = smtp::Base64::Base64UrlDecode("");
+    CHECK( result.empty() );
+}
 
 
