@@ -1,4 +1,5 @@
 # Very-Simple-SMTPS
+[![Build status](https://ci.appveyor.com/api/projects/status/914ruifjnopxs3gy?svg=true)](https://ci.appveyor.com/project/matthewT53/very-simple-smtps)
 A small library written in c++ that uses libcurl to be able to send emails with binary attachments.
 
 ## Building:
