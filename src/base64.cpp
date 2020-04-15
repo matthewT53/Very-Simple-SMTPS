@@ -84,7 +84,6 @@ const std::vector<byte> DoBase64Decode(const std::string &data, const std::strin
     std::vector<byte> result;
 
     int i = 0;
-    int n = static_cast<int>( data.size() );
     std::string arr(4, 0x0);
 
     for (byte b : data)
@@ -101,16 +100,16 @@ const std::vector<byte> DoBase64Decode(const std::string &data, const std::strin
     return result;
 }
 
-const std::vector<byte> DoBase64DecodeBlock(const std::string &data, const std::string &table, int padding = 0)
+const std::vector<byte> DoBase64DecodeBlock(const std::string &data, const std::string &table, int padding)
 {
-    //TODO: Finish this
-    std::vector<byte> result;
+    std::vector<byte> result(3);
 
-    byte b1 = (data[0] << 2) | ((data[1] & 0xC0) >> 6);
-    byte b2 = ((data[1] & 0x3f) << 2) | ((data[2] & 0xc0) >> 6);
-    byte b3 = (data[2] & 0x3f) | data[3];
+    std::cout << "data[0] << 2 = " << ((data[0] & 0x3f) << 2) << std::endl; 
 
-
+    //TODO: Convert the base64 letters back into an index first and then process the index.
+    result[0] = ((data[0] & 0x3f) << 2) | ((data[1] & 0x30) >> 4);
+    result[1] = ((data[1] & 0xf) << 4) | ((data[2] & 0x3c) >> 2);
+    result[2] = (data[2] & 0x3 << 6) | data[3];
 
     return result;
 }
