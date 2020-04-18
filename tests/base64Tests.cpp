@@ -1,5 +1,6 @@
 #include "CppUTest/TestHarness.h"
 
+#include <iostream>
 #include <vector>
 #include <cstdint>
 
@@ -86,6 +87,7 @@ TEST_GROUP( Base64DecodingTests )
 
 TEST( Base64DecodingTests, BasicDecodingTest )
 {
+    std::cout << "[+] Running BasicDecodingTest: " << std::endl;
     const std::string data = "YWFh";
     const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
     const std::string result( data_bytes.begin(), data_bytes.end() );
@@ -98,6 +100,9 @@ TEST( Base64DecodingTests, DecodePaddingTest )
     const std::string data = "QXJlIHdlIHJlYWxseSBmcmVlPw==";
     const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
     const std::string result( data_bytes.begin(), data_bytes.end() );
+
+    std::cout << "[+] Len: " << std::string("Are we really free?").length() << std::endl;
+    std::cout << "[+] Len2: " << result.length() << std::endl;
 
     CHECK_EQUAL( "Are we really free?", result );
 }
