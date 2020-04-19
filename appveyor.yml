@@ -4,6 +4,6 @@ image: Ubuntu
 init:
   - echo "Initializing environment:"
 
-install: chmod u+x setup.sh && ./setup.sh
-build_script: chmod u+x build.sh && ./build.sh
-test_script: ./build/tests/smtp_tests -c
+install: chmod u+x scripts/setup.sh && ./scripts/setup.sh
+build_script: chmod u+x scripts/build.sh && ./scripts/build.sh
+test_script: chmod u+x scripts/run_tests.sh && ./scripts/run_tests.sh -c
