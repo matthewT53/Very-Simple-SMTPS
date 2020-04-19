@@ -101,9 +101,6 @@ TEST( Base64DecodingTests, DecodePaddingTest )
     const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
     const std::string result( data_bytes.begin(), data_bytes.end() );
 
-    std::cout << "[+] Len: " << std::string("Are we really free?").length() << std::endl;
-    std::cout << "[+] Len2: " << result.length() << std::endl;
-
     CHECK_EQUAL( "Are we really free?", result );
 }
 
@@ -111,7 +108,7 @@ TEST( Base64DecodingTests, BinaryDataDecodeTest )
 {
     const std::string data = "hnOQkJCAdRIICg==";
     const std::vector<byte> result = smtp::Base64::Base64Decode(data);
-    const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08};
+    const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08, 0xa};
 
     CHECK( expected == result );
 }

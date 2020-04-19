@@ -51,7 +51,6 @@ const std::string smtp::Base64::Base64UrlEncode(const std::vector<byte> &data, b
 
 const std::vector<byte> smtp::Base64::Base64UrlDecode(const std::string &data)
 {
-    //TODO: Insert padding characters back into the string
     return DoBase64Decode( data );
 }
 
@@ -141,10 +140,23 @@ const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int p
     result[1] = ((i2 & 0xf) << 4) | ((i3 & 0x3c) >> 2);
     result[2] = ((i3 & 0x3) << 6) | i4;
 
-    // Padding will either be 2 or 3, since it is not possible to have 1 byte
-    if (padding == 2 || padding == 3)
+
+    int extra = padding;
+    if (data_block[3] == '=')
     {
-        result.resize(3 - (4 - padding));
+        extra = 1;
+    }
+
+    if (data_block[2] == '=')
+    {
+        extra = 2;
+    }
+
+    // Padding will either be 2 or 3, since it is not possible to have 1 byte
+    if (extra > 0)
+    {
+        int missing = 4 - extra;
+        result.resize(3 - missing);
     }
 
     return result;
