@@ -87,7 +87,6 @@ TEST_GROUP( Base64DecodingTests )
 
 TEST( Base64DecodingTests, BasicDecodingTest )
 {
-    std::cout << "[+] Running BasicDecodingTest: " << std::endl;
     const std::string data = "YWFh";
     const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
     const std::string result( data_bytes.begin(), data_bytes.end() );
@@ -111,6 +110,15 @@ TEST( Base64DecodingTests, BinaryDataDecodeTest )
     const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08, 0xa};
 
     CHECK( expected == result );
+}
+
+TEST( Base64DecodingTests, DecodeOnePaddingTest )
+{
+    const std::string data = "V2hhdCBhcmUgeW91IGRvaW5nIGZyaWVuZD8=";
+    const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
+    const std::string result( data_bytes.begin(), data_bytes.end() );
+
+    CHECK_EQUAL( "What are you doing friend?", result );
 }
 
 TEST( Base64DecodingTests, EmptyStringTest )

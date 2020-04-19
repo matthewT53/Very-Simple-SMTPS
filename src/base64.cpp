@@ -140,23 +140,22 @@ const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int p
     result[1] = ((i2 & 0xf) << 4) | ((i3 & 0x3c) >> 2);
     result[2] = ((i3 & 0x3) << 6) | i4;
 
-
-    int extra = padding;
+    int n_chars = padding;
     if (data_block[3] == '=')
     {
-        extra = 1;
+        n_chars = 3;
     }
 
     if (data_block[2] == '=')
     {
-        extra = 2;
+        n_chars = 2;
     }
 
     // Padding will either be 2 or 3, since it is not possible to have 1 byte
-    if (extra > 0)
+    if (n_chars > 0)
     {
-        int missing = 4 - extra;
-        result.resize(3 - missing);
+        int num_remove = 4 - n_chars;
+        result.resize(3 - num_remove);
     }
 
     return result;
