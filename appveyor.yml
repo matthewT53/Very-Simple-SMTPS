@@ -1,0 +1,9 @@
+version: '1.0.{build}'
+image: Ubuntu
+
+init:
+  - echo "Initializing environment:"
+
+install: chmod u+x setup.sh && ./setup.sh
+build_script: chmod u+x build.sh && ./build.sh
+test_script: ./build/tests/smtp_tests -c

@@ -140,6 +140,7 @@ const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int p
     result[1] = ((i2 & 0xf) << 4) | ((i3 & 0x3c) >> 2);
     result[2] = ((i3 & 0x3) << 6) | i4;
 
+    //TODO: This code can be a bit cleaner, use findFirstChar().
     int n_chars = padding;
     if (data_block[3] == '=')
     {
