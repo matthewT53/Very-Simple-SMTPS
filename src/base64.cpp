@@ -77,10 +77,9 @@ const std::string DoBase64Encode(const std::vector<byte> &data, const std::strin
     return result;
 }
 
-/***
- * Base64 encodes a block of plaintext. 
- * It is assumed that data_block contains a maximum of 3 bytes in size. 
- */
+
+// Base64 encodes a block of plaintext. 
+// It is assumed that data_block contains a maximum of 3 bytes in size. 
 const std::string DoBase64EncodeBlock(const std::vector<byte> &data_block, const std::string &table, int padding)
 {
     int i1 = (data_block[0] & 0xfc) >> 2;
@@ -118,11 +117,10 @@ const std::vector<byte> DoBase64Decode(const std::string &data)
     return result;
 }
 
-/***
- * This function base64 decodes a block of 4 base64 encoded characters.
- * It is assumed that data_block is 4 bytes in size.
- */
-const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int num_chars)
+
+// This function base64 decodes a block of 4 base64 encoded characters.
+// It is assumed that data_block is 4 bytes in size.
+const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int rem_chars)
 {
     std::vector<byte> result(3);
 
@@ -136,7 +134,7 @@ const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int n
     result[2] = ((i3 & 0x3) << 6) | i4;
 
     size_t padding_pos = data_block.find_first_of("=");
-    int n_chars = (padding_pos == std::string::npos) ? num_chars : static_cast<int>( padding_pos );
+    int n_chars = (padding_pos == std::string::npos) ? rem_chars : static_cast<int>( padding_pos );
 
     // Padding will either be 2 or 3, since it is not possible to have 1 byte
     if (n_chars > 0)
