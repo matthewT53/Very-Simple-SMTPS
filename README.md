@@ -24,6 +24,7 @@ A small library written in C++ that uses libcurl to be able to send emails with 
 
 ## Building:
 * To **build** the tests and the examples:
+* **Note:** The build script must be run from the project's root directory.
 ```sh
     $ ./scripts/build.sh
 ```

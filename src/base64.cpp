@@ -77,14 +77,12 @@ const std::string DoBase64Encode(const std::vector<byte> &data, const std::strin
     return result;
 }
 
+/***
+ * Base64 encodes a block of plaintext. 
+ * It is assumed that data_block contains a maximum of 3 bytes in size. 
+ */
 const std::string DoBase64EncodeBlock(const std::vector<byte> &data_block, const std::string &table, int padding)
 {
-    if (data_block.size() != 3)
-    {
-        //TODO: Look into exception handling
-        std::cout << "[!] Data block is not of size 3!" << std::endl;
-    }
-
     int i1 = (data_block[0] & 0xfc) >> 2;
     int i2 = ((data_block[0] & 0x3) << 4) | ((data_block[1] & 0xf0) >> 4);
     int i3 = ((data_block[1] & 0xf) << 2) | ((data_block[2] & 0xc0) >> 6);
@@ -120,37 +118,25 @@ const std::vector<byte> DoBase64Decode(const std::string &data)
     return result;
 }
 
-const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int padding)
+/***
+ * This function base64 decodes a block of 4 base64 encoded characters.
+ * It is assumed that data_block is 4 bytes in size.
+ */
+const std::vector<byte> DoBase64DecodeBlock(const std::string &data_block, int num_chars)
 {
     std::vector<byte> result(3);
-
-    if (data_block.size() != 4)
-    {
-        //TODO: Look into exception handling.
-        std::cout << "[!] Data block is not equal to 4!" << std::endl;
-    }
 
     byte i1 = kDecodeTable.find(data_block[0])->second;
     byte i2 = kDecodeTable.find(data_block[1])->second;
     byte i3 = kDecodeTable.find(data_block[2])->second;
     byte i4 = kDecodeTable.find(data_block[3])->second;
 
-    //TODO: Convert the base64 letters back into an index first and then process the index.
     result[0] = ((i1 & 0x3f) << 2) | ((i2 & 0x30) >> 4);
     result[1] = ((i2 & 0xf) << 4) | ((i3 & 0x3c) >> 2);
     result[2] = ((i3 & 0x3) << 6) | i4;
 
-    //TODO: This code can be a bit cleaner, use findFirstChar().
-    int n_chars = padding;
-    if (data_block[3] == '=')
-    {
-        n_chars = 3;
-    }
-
-    if (data_block[2] == '=')
-    {
-        n_chars = 2;
-    }
+    size_t padding_pos = data_block.find_first_of("=");
+    int n_chars = (padding_pos == std::string::npos) ? num_chars : static_cast<int>( padding_pos );
 
     // Padding will either be 2 or 3, since it is not possible to have 1 byte
     if (n_chars > 0)
