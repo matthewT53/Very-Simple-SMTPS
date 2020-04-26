@@ -10,99 +10,66 @@
 // #include "stdafx.h"
 #include "email.h"
 
-Email::Email()
+smtp::Email::Email()
 {
 	// empty constructor
 }
 
-void Email::setTo(const std::string to)
+void smtp::Email::setTo(const std::string p_to)
 {
-	this->to = to;
+	this->m_to = p_to;
 }
 
-void Email::setFrom(const std::string from)
+void smtp::Email::setFrom(const std::string p_from)
 {
-	this->from = from;
+	this->m_from = p_from;
 }
 
-void Email::setCc(const std::string cc)
+void smtp::Email::setCc(const std::string p_cc)
 {
-	this->cc = cc;
+	this->m_cc = p_cc;
 }
 
-void Email::setSubject(const std::string subject)
+void smtp::Email::setSubject(const std::string p_subject)
 {
-	this->subject = subject;
+	this->m_subject = p_subject;
 }
 
-void Email::setBody(const std::string body)
+void smtp::Email::setBody(const std::string p_body)
 {
-	this->body = body;
+	this->m_body = p_body;
 }
 
-void Email::setSMTP_username(const std::string user)
+void smtp::Email::setSmtpUsername(const std::string p_user)
 {
-	this->smtp_user = user;
+	this->m_smtp_user = p_user;
 }
 
-void Email::setSMTP_password(const std::string pass)
+void smtp::Email::setSmtpPassword(const std::string p_password)
 {
-	this->smtp_password = pass;
+	this->m_smtp_password = p_password;
 }
 
-void Email::setSMTP_host(const std::string hostname)
+void smtp::Email::setSmtpHost(const std::string p_hostname)
 {
-	this->smtp_host = hostname;
+	this->m_smtp_host = p_hostname;
 }
 
-void Email::addAttachment(const std::string file_path)
+void smtp::Email::addAttachment(const std::string p_file_path)
 {
-	
-}
-
-void Email::constructEmail(void)
-{
-	
 }
 
 /*
 	This function was taken and modified from:
 	https://curl.haxx.se/libcurl/c/smtp-ssl.html
 */
-int Email::send(void) const
+int smtp::Email::send(void) const
 {
 	//TODO:
 	return 0;
 }
 
-void Email::removeAllAttachments()
+void smtp::Email::removeAllAttachments()
 {
-	this->attachments.clear();
-}
-
-void Email::clearEmailContents()
-{
-	this->email_contents.clear();
-	this->attachments.clear();
-}
-
-void Email::dump(void) const
-{
-	int i = 0;
-
-	std::cout << "Email contents: " << std::endl;
-	for (i = 0; i < static_cast<int>( this->email_contents.size() ); i++) {
-		std::cout << this->email_contents[i];
-		if (i == 20) {
-			break;
-		}
-	}
-
-	std::cout << "\n\nEmail attachments: " << std::endl;
-	for (i = 0; i < static_cast<int>( this->attachments.size() ); i++) {
-		std::cout << this->attachments[i];
-		if (i == 5) {
-			break;
-		}
-	}
+	this->m_attachments.clear();
 }

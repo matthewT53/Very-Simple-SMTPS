@@ -12,9 +12,8 @@
 
 #include "curl/curl.h"
 
-// Enable one of the below depending on your operating system
-// #define WINDOWS_H
-#define LINUX_H
+namespace smtp 
+{
 
 class Email
 {
@@ -22,70 +21,44 @@ public:
 	// default constructor
 	Email();
 
-	// sets who the email is going to
-	void setTo(const std::string to);
-
-	// sets who the email came from
-	void setFrom(const std::string from);
-
-	// sets the cc
-	void setCc(const std::string to);
-
-	// sets the subject of the email
-	void setSubject(const std::string subject);
-
-	// set the body of the email
-	void setBody(const std::string body);
-
-	// sets the smtp username 
-	void setSMTP_username(const std::string username);
-
-	// sets the smtp password 
-	void setSMTP_password(const std::string password);
-
-	// sets the SMTP HOST
-	void setSMTP_host(const std::string host);
-
-	// adds a binary attachment to the email
-	void addAttachment(const std::string filepath);
-
-	// removes an attachment from the email (Not implemented yet)
-	void removeAttachment(const std::string filepath);
-
-	// removes all attachments
+	void setTo(const std::string p_to);
+	void setFrom(const std::string p_from);
+	void setCc(const std::string p_to);
+	void setSubject(const std::string p_subject);
+	void setBody(const std::string p_body);
+	void setSmtpUsername(const std::string p_username);
+	void setSmtpPassword(const std::string p_password);
+	void setSmtpHost(const std::string p_host);
+	void addAttachment(const std::string p_filepath);
+	void removeAttachment(const std::string p_filepath);
 	void removeAllAttachments();
+	void clear();
 
-	// contructs the final email
-	void constructEmail();
-
-	// clears the contents of the email
-	void clearEmailContents();
-
-	
 	int send() const; 
 
-	void dump() const;
+	friend std::ostream &operator<<(std::ostream &p_out, const Email &p_email);
 
 private:
 	// smtp information
-	std::string smtp_user;
-	std::string smtp_password;
-	std::string smtp_host;
+	std::string m_smtp_user;
+	std::string m_smtp_password;
+	std::string m_smtp_host;
 
 	// email data
-	std::string to;
-	std::string from;
-	std::string cc;
-	std::string subject;
-	std::string body;
+	std::string m_to;
+	std::string m_from;
+	std::string m_cc;
+	std::string m_subject;
+	std::string m_body;
 
 	// vector which stores the email data
-	std::vector<std::string> email_contents;
-	std::vector<std::string> attachments;
+	std::vector<std::string> m_attachments;
 
-	// length of the above vector
-	int numberOfLines;
+	// contructs the final email
+	void constructEmail();
 };
+
+}
 
 #endif
 

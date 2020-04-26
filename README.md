@@ -35,4 +35,4 @@ A small library written in C++ that uses libcurl to be able to send emails with 
 
 ## Contributing:
 #### Coding standards:
-* Just keep it consistent with the existing code please.
+* See: https://github.com/lefticus/cppbestpractices
