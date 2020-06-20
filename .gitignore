@@ -1,0 +1,5 @@
+*.txt
+build*/
+.vscode/
+test_data/
+tests/end_to_end/
