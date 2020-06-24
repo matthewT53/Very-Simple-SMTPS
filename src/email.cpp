@@ -20,62 +20,6 @@ Email::Email()
 	m_mime = std::make_unique<smtp::Mime>();
 }
 
-void Email::setTo( const std::string &p_to )
-{
-	m_to = p_to;
-}
-
-void Email::setFrom( const std::string &p_from )
-{
-	m_from = p_from;
-}
-
-void Email::setCc( const std::string &p_cc )
-{
-	m_cc = p_cc;
-}
-
-void Email::setSubject( const std::string &p_subject )
-{
-	m_subject = p_subject;
-}
-
-void Email::setBody( const std::string &p_body )
-{
-	m_body = p_body;
-	m_mime->addMessage(m_body);
-}
-
-void Email::setSmtpUsername( const std::string &p_user )
-{
-	m_smtp_user = p_user;
-}
-
-void Email::setSmtpPassword( const std::string &p_password )
-{
-	m_smtp_password = p_password;
-}
-
-void Email::setSmtpHost( const std::string &p_hostname )
-{
-	m_smtp_host = p_hostname;
-}
-
-void Email::addAttachment( const std::string &p_attachment )
-{
-	m_mime->addAttachment(p_attachment);
-}
-
-void Email::removeAttachment( const std::string &p_attachment )
-{
-	m_mime->removeAttachment(p_attachment);
-}
-
-void Email::setMimeDocument( std::unique_ptr<smtp::IMime> &p_mime )
-{
-	m_mime = std::move(p_mime);
-}
-
 typedef struct _upload_status {
 	uint64_t lines_read;
 	std::vector<std::string> email_contents;
