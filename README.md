@@ -30,7 +30,18 @@ A small library written in C++ that uses libcurl to be able to send emails with 
 * **Note:** The recommendation is to execute this script while inside a python virtual environment.
 
 ## Building:
-* To **build** the tests and the examples:
+* To **build** the tests and the examples, **you will need gcc-9 or newer** to compile the latest C++17 features.
+* To change the compiler, set the CC and CXX environment variables in scripts/build.sh:
+```bash
+#!/bin/bash
+
+# Set the GCC compiler to version 8+ for C++17 features to work.
+export CC=gcc-9     # Change it here
+export CXX=g++-9    # And here
+
+meson build && cd build 
+ninja
+```
 * **Note:** The build script must be run from the project's root directory.
 ```sh
     $ ./scripts/build.sh
