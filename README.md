@@ -9,7 +9,7 @@ A small library written in C++ that uses libcurl to be able to send emails with 
 * Also remove the meson.build files that are in each folder.
 * **Note:** This library relies on the curl library, so you would need to install libcurl:
 ```sh
-    sudo apt-get install libcurl4 libcurl4-openssl-dev
+    sudo apt-get install libcurl4 libcurl4-openssl-dev # or libcurl4-gnutls-dev
 ```
 * If you are on Windows, then you need to download the library file (*.a) and link to it.
 * **NOTE:** When sending attachments, the fullpath to the file must be provided!
