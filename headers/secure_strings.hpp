@@ -1,5 +1,4 @@
-#ifndef SMTP_SECURE_ALLOCATOR_H
-#define SMTP_SECURE_ALLOCATOR_H
+#pragma once
 
 #include <cstring>
 #include <iostream>
@@ -59,5 +58,3 @@ using secure_string =
     std::basic_string<char, std::char_traits<char>, SecureAllocator<char>>;
 
 } // namespace smtp
-
-#endif

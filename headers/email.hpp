@@ -3,8 +3,7 @@
     Supports SMTPS only.
 */
 
-#ifndef SMTP_EMAIL_H
-#define SMTP_EMAIL_H
+#pragma once
 
 #include <vector>
 #include <string>
@@ -19,7 +18,6 @@ namespace smtp
 class Email
 {
     public:
-        // default constructor
         Email();
 
         inline void setTo( const std::string &p_to ) { m_to = p_to; }
@@ -68,7 +66,3 @@ class Email
 };
 
 }
-
-#endif
-
-

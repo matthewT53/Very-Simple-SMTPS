@@ -1,5 +1,4 @@
-#ifndef SMTP_MIME_H
-#define SMTP_MIME_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -50,5 +49,3 @@ class Mime : public smtp::IMime
 };
 
 }
-
-#endif

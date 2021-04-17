@@ -1,5 +1,4 @@
-#ifndef SMTP_IMIME_H
-#define SMTP_IMIME_H
+#pragma once
 
 #include <iostream>
 #include <string>
@@ -39,5 +38,3 @@ class IMime {
 };
 
 } // namespace smtp
-
-#endif

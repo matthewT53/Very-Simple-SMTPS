@@ -1,5 +1,4 @@
-#ifndef SMTP_BASE64_H
-#define SMTP_BASE64_H
+#pragma once
 
 #include <vector>
 #include <cstdint>
@@ -21,5 +20,3 @@ class Base64
 };
 
 }
-
-#endif
