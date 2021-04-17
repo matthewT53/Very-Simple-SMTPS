@@ -120,8 +120,8 @@ std::vector<std::string> Email::build() const
 	auto cur_time = std::chrono::system_clock::now(); 
 	const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
 
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
+	std::stringstream ss;
+	ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
 
 	result.push_back("To: " + m_to + "\r\n");
 	result.push_back("From: " + m_from + "\r\n");
