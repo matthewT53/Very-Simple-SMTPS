@@ -1,0 +1,17 @@
+kind: pipeline
+name: development
+type: vm
+
+pool:
+  use: ubuntu-aws
+
+steps:
+  - name: build & test
+    image: gcc:13.1.0
+    pull: true
+    commands:
+      - chmod u+x ./scripts/setup.sh ; ./scripts/setup.sh
+      - chmod u+x ./scripts/venv.sh
+      - . ./scripts/venv.sh
+      - chmod u+x ./scripts/build.sh; ./scripts/build.sh
+      - cd build ; meson test -v

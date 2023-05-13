@@ -1,9 +1,0 @@
-version: '1.0.{build}'
-image: Ubuntu1804
-
-init:
-  - echo "Initializing environment:"
-
-install: chmod u+x scripts/setup.sh && ./scripts/setup.sh
-build_script: chmod u+x scripts/build.sh && ./scripts/build.sh
-test_script: chmod u+x scripts/run_tests.sh && ./scripts/run_tests.sh -c
