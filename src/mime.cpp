@@ -43,8 +43,7 @@ void Mime::buildHeader(std::vector<std::string> &p_contents) const {
 
 void Mime::buildMessages(std::vector<std::string> &p_contents) const {
   for (const std::string &message : m_messages) {
-    p_contents.push_back(
-        "Content-Type: text/plain; charset=utf-8; format=flowed\r\n");
+    p_contents.push_back("Content-Type: text/plain; charset=utf-8; format=flowed\r\n");
     p_contents.push_back("Content-Transfer-Encoding: 7bit\r\n");
     p_contents.push_back("\r\n");
     p_contents.push_back(message + "\r\n");
@@ -73,8 +72,7 @@ void Mime::buildAttachments(std::vector<std::string> &p_contents) const {
     const std::string &contents = ss.str();
     const std::vector<byte> content_bytes(contents.begin(), contents.end());
     const std::string &contents_b64 = Base64::Base64Encode(content_bytes);
-    const std::string &filename =
-        std::filesystem::path(attachment).filename().string();
+    const std::string &filename = std::filesystem::path(attachment).filename().string();
 
     p_contents.push_back("Content-Type: application/octet-stream\r\n");
     p_contents.push_back("Content-Transfer-Encoding: base64\r\n");
@@ -97,13 +95,9 @@ void Mime::buildAttachments(std::vector<std::string> &p_contents) const {
   }
 }
 
-void Mime::addAttachment(const std::string &p_attachment) {
-  m_files.push_back(p_attachment);
-}
+void Mime::addAttachment(const std::string &p_attachment) { m_files.push_back(p_attachment); }
 
-void Mime::addMessage(const std::string &p_message) {
-  m_messages.push_back(p_message);
-}
+void Mime::addMessage(const std::string &p_message) { m_messages.push_back(p_message); }
 
 void Mime::removeAttachment(const std::string &p_filename) {
   auto it = std::find(m_files.begin(), m_files.end(), p_filename);

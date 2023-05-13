@@ -36,9 +36,7 @@ TEST(Base64EncodingTests, TypicalExampleTest) {
   const std::vector<byte> data(text.begin(), text.end());
   const std::string encoded = smtp::Base64::Base64Encode(data);
 
-  CHECK_EQUAL(
-      std::string("d2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyPw=="),
-      encoded);
+  CHECK_EQUAL(std::string("d2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyPw=="), encoded);
 }
 
 TEST(Base64EncodingTests, BinaryDataTest) {
@@ -60,9 +58,7 @@ TEST(Base64UrlEncodingTests, BasicEncodingTest) {
   const std::vector<byte> data(text.begin(), text.end());
   const std::string encoded = smtp::Base64::Base64UrlEncode(data);
 
-  CHECK_EQUAL(
-      std::string("aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw"),
-      encoded);
+  CHECK_EQUAL(std::string("aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw"), encoded);
 }
 
 TEST(Base64UrlEncodingTests, PaddingRemovalTest) {
@@ -94,8 +90,7 @@ TEST(Base64DecodingTests, DecodePaddingTest) {
 TEST(Base64DecodingTests, BinaryDataDecodeTest) {
   const std::string data = "hnOQkJCAdRIICg==";
   const std::vector<byte> result = smtp::Base64::Base64Decode(data);
-  const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90,
-                                      0x80, 0x75, 0x12, 0x08, 0xa};
+  const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08, 0xa};
 
   CHECK(expected == result);
 }
@@ -116,13 +111,11 @@ TEST(Base64DecodingTests, EmptyStringTest) {
 TEST_GROUP(Base64UrlDecodingTests){};
 
 TEST(Base64UrlDecodingTests, BasicDecodingTest) {
-  const std::string data =
-      "aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw";
+  const std::string data = "aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw";
   const std::vector<byte> result = smtp::Base64::Base64UrlDecode(data);
   const std::string actual(result.begin(), result.end());
 
-  CHECK_EQUAL(std::string("hey mate how are you doing? good day today?"),
-              actual);
+  CHECK_EQUAL(std::string("hey mate how are you doing? good day today?"), actual);
 }
 
 TEST(Base64UrlDecodingTests, DecodePaddingTest) {

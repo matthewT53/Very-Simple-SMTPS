@@ -79,19 +79,18 @@ TEST(MimeTests, NoAttachmentsTest) {
   ss << m;
 
   const std::string &actual = ss.str();
-  const std::string &expected =
-      "User-Agent: test_user_agent\r\n"
-      "MIME-Version: 1.0\r\n"
-      "Content-Type: multipart/mixed;\r\n"
-      " boundary=\"" +
-      smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: text/plain; charset=utf-8; format=flowed\r\n"
-      "Content-Transfer-Encoding: 7bit\r\n"
-      "\r\n" +
-      message + "\r\n" + smtp::Mime::kBoundary + "\r\n";
+  const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                "MIME-Version: 1.0\r\n"
+                                "Content-Type: multipart/mixed;\r\n"
+                                " boundary=\"" +
+                                smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: text/plain; charset=utf-8; format=flowed\r\n"
+                                "Content-Transfer-Encoding: 7bit\r\n"
+                                "\r\n" +
+                                message + "\r\n" + smtp::Mime::kBoundary + "\r\n";
 
   CHECK_EQUAL(expected, actual);
 }
@@ -107,25 +106,24 @@ TEST(MimeTests, TextFileAttachmentTest) {
   const std::string &text_filename = fs::path(kTextPath).filename().string();
 
   const std::string &actual = ss.str();
-  const std::string &expected =
-      "User-Agent: test_user_agent\r\n"
-      "MIME-Version: 1.0\r\n"
-      "Content-Type: multipart/mixed;\r\n"
-      " boundary=\"" +
-      smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: application/octet-stream\r\n"
-      "Content-Transfer-Encoding: base64\r\n"
-      "Content-Disposition: attachment;\r\n"
-      " filename=" +
-      text_filename +
-      "\r\n"
-      "\r\n"
-      "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu"
-      "\r\n\r\n" +
-      smtp::Mime::kBoundary + "\r\n";
+  const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                "MIME-Version: 1.0\r\n"
+                                "Content-Type: multipart/mixed;\r\n"
+                                " boundary=\"" +
+                                smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: application/octet-stream\r\n"
+                                "Content-Transfer-Encoding: base64\r\n"
+                                "Content-Disposition: attachment;\r\n"
+                                " filename=" +
+                                text_filename +
+                                "\r\n"
+                                "\r\n"
+                                "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu"
+                                "\r\n\r\n" +
+                                smtp::Mime::kBoundary + "\r\n";
 
   CHECK_EQUAL(expected, actual);
 }
@@ -140,25 +138,24 @@ TEST(MimeTests, BinaryAttachmentTest) {
 
   const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
   const std::string &actual = ss.str();
-  const std::string &expected =
-      "User-Agent: test_user_agent\r\n"
-      "MIME-Version: 1.0\r\n"
-      "Content-Type: multipart/mixed;\r\n"
-      " boundary=\"" +
-      smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: application/octet-stream\r\n"
-      "Content-Transfer-Encoding: base64\r\n"
-      "Content-Disposition: attachment;\r\n"
-      " filename=" +
-      bin_filename +
-      "\r\n"
-      "\r\n"
-      "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
-      "\r\n" +
-      smtp::Mime::kBoundary + "\r\n";
+  const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                "MIME-Version: 1.0\r\n"
+                                "Content-Type: multipart/mixed;\r\n"
+                                " boundary=\"" +
+                                smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: application/octet-stream\r\n"
+                                "Content-Transfer-Encoding: base64\r\n"
+                                "Content-Disposition: attachment;\r\n"
+                                " filename=" +
+                                bin_filename +
+                                "\r\n"
+                                "\r\n"
+                                "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
+                                "\r\n" +
+                                smtp::Mime::kBoundary + "\r\n";
 
   CHECK_EQUAL(expected, actual);
 }
@@ -176,36 +173,35 @@ TEST(MimeTests, MultipleAttachmentTest) {
   const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
 
   const std::string &actual = ss.str();
-  const std::string &expected =
-      "User-Agent: test_user_agent\r\n"
-      "MIME-Version: 1.0\r\n"
-      "Content-Type: multipart/mixed;\r\n"
-      " boundary=\"" +
-      smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: application/octet-stream\r\n"
-      "Content-Transfer-Encoding: base64\r\n"
-      "Content-Disposition: attachment;\r\n"
-      " filename=" +
-      text_filename +
-      "\r\n"
-      "\r\n"
-      "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu\r\n"
-      "\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: application/octet-stream\r\n"
-      "Content-Transfer-Encoding: base64\r\n"
-      "Content-Disposition: attachment;\r\n"
-      " filename=" +
-      bin_filename +
-      "\r\n"
-      "\r\n"
-      "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
-      "\r\n" +
-      smtp::Mime::kBoundary + "\r\n";
+  const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                "MIME-Version: 1.0\r\n"
+                                "Content-Type: multipart/mixed;\r\n"
+                                " boundary=\"" +
+                                smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: application/octet-stream\r\n"
+                                "Content-Transfer-Encoding: base64\r\n"
+                                "Content-Disposition: attachment;\r\n"
+                                " filename=" +
+                                text_filename +
+                                "\r\n"
+                                "\r\n"
+                                "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu\r\n"
+                                "\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: application/octet-stream\r\n"
+                                "Content-Transfer-Encoding: base64\r\n"
+                                "Content-Disposition: attachment;\r\n"
+                                " filename=" +
+                                bin_filename +
+                                "\r\n"
+                                "\r\n"
+                                "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
+                                "\r\n" +
+                                smtp::Mime::kBoundary + "\r\n";
 
   CHECK_EQUAL(expected, actual);
 }
@@ -223,25 +219,24 @@ TEST(MimeTests, RemoveAttachmentTest) {
   const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
 
   const std::string &actual = ss.str();
-  const std::string &expected =
-      "User-Agent: test_user_agent\r\n"
-      "MIME-Version: 1.0\r\n"
-      "Content-Type: multipart/mixed;\r\n"
-      " boundary=\"" +
-      smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
-      "\r\n"
-      "Content-Type: application/octet-stream\r\n"
-      "Content-Transfer-Encoding: base64\r\n"
-      "Content-Disposition: attachment;\r\n"
-      " filename=" +
-      bin_filename +
-      "\r\n"
-      "\r\n"
-      "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
-      "\r\n" +
-      smtp::Mime::kBoundary + "\r\n";
+  const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                "MIME-Version: 1.0\r\n"
+                                "Content-Type: multipart/mixed;\r\n"
+                                " boundary=\"" +
+                                smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                smtp::Mime::kBoundary +
+                                "\r\n"
+                                "Content-Type: application/octet-stream\r\n"
+                                "Content-Transfer-Encoding: base64\r\n"
+                                "Content-Disposition: attachment;\r\n"
+                                " filename=" +
+                                bin_filename +
+                                "\r\n"
+                                "\r\n"
+                                "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
+                                "\r\n" +
+                                smtp::Mime::kBoundary + "\r\n";
 
   CHECK_EQUAL(expected, actual);
 }
@@ -254,8 +249,7 @@ TEST(MimeTests, VeryLargeAttachmentTest) {
   std::stringstream ss;
   ss << m;
 
-  const std::string &bin_filename =
-      fs::path(kLargeBinaryPath).filename().string();
+  const std::string &bin_filename = fs::path(kLargeBinaryPath).filename().string();
 
   const std::string &actual = ss.str();
   const std::string &expected =
@@ -264,8 +258,7 @@ TEST(MimeTests, VeryLargeAttachmentTest) {
       "Content-Type: multipart/mixed;\r\n"
       " boundary=\"" +
       smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-      "\r\nThis is a multi-part message in MIME format.\r\n" +
-      smtp::Mime::kBoundary +
+      "\r\nThis is a multi-part message in MIME format.\r\n" + smtp::Mime::kBoundary +
       "\r\n"
       "Content-Type: application/octet-stream\r\n"
       "Content-Transfer-Encoding: base64\r\n"
