@@ -6,22 +6,14 @@ pool:
   use: ubuntu-aws
 
 steps:
-  - name: init
+  - name: init & build
     image: gcc:13.1.0
     pull: true
     commands:
       - chmod u+x ./scripts/setup.sh ; ./scripts/setup.sh
       - chmod u+x ./scripts/venv.sh
       - . ./scripts/venv.sh
-
-  - name: build
-    image: gcc:13.1.0
-    pull: true
-    commands:
-      - . ./scripts/venv.sh
       - chmod u+x ./scripts/build.sh; ./scripts/build.sh
-    depends_on:
-      - init
 
   - name: unit tests
     image: gcc:13.1.0
@@ -30,7 +22,7 @@ steps:
       - . ./scripts/venv.sh
       - cd build ; meson test -v
     depends_on:
-      - build
+      - init & build
 
   - name: release
     image: gcc:13.1.0
