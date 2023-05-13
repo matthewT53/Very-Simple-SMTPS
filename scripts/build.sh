@@ -4,5 +4,5 @@
 export CC=gcc-9
 export CXX=g++-9
 
-meson build && cd build 
+meson build && cd build
 ninja
