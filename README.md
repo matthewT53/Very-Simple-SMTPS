@@ -5,7 +5,7 @@
 A small library written in C++ that uses libcurl to be able to send emails with binary attachments.
 
 ## Using in your project:
-* Simply copy everything headers and src files into your own project. 
+* Simply copy everything headers and src files into your own project.
 * Also remove the meson.build files that are in each folder.
 * **Note:** This library relies on the curl library, so you would need to install libcurl:
 ```sh
@@ -39,7 +39,7 @@ A small library written in C++ that uses libcurl to be able to send emails with 
 export CC=gcc-9     # Change it here
 export CXX=g++-9    # And here
 
-meson build && cd build 
+meson build && cd build
 ninja
 ```
 * **Note:** The build script must be run from the project's root directory.

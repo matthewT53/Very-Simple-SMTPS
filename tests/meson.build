@@ -14,8 +14,8 @@ test_srcs = [
 # incdir is inherited from the root meson.build file.
 # smtp_lib comes from compiling the ./src directory.
 tests_exe = executable(
-    'smtp_tests', 
-    test_srcs, 
+    'smtp_tests',
+    test_srcs,
     include_directories : incdir,
     link_with : smtp_lib,
     dependencies : cpputest_dep,
