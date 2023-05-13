@@ -18,7 +18,7 @@ steps:
     image: gcc:13.1.0
     pull: true
     commands:
-      - . ./scripts/devenv/venv.sh
+      - . ./scripts/venv.sh
       - chmod u+x ./scripts/build.sh; ./scripts/build.sh
     depends_on:
       - init
