@@ -6,7 +6,7 @@ pool:
   use: ubuntu-aws
 
 steps:
-  - name: init & build
+  - name: build & test
     image: gcc:13.1.0
     pull: true
     commands:
@@ -14,20 +14,4 @@ steps:
       - chmod u+x ./scripts/venv.sh
       - . ./scripts/venv.sh
       - chmod u+x ./scripts/build.sh; ./scripts/build.sh
-
-  - name: unit tests
-    image: gcc:13.1.0
-    pull: true
-    commands:
-      - . ./scripts/venv.sh
       - cd build ; meson test -v
-    depends_on:
-      - init & build
-
-  - name: release
-    image: gcc:13.1.0
-    pull: true
-    commands:
-      - echo "Build, tests, docs and code checks have finished!"
-    depends_on:
-      - unit tests
