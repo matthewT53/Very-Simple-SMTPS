@@ -98,8 +98,7 @@ void Email::send() const {
 
     /* Check for errors */
     if (res != CURLE_OK)
-      fprintf(stderr, "curl_easy_perform() failed: %s\n",
-              curl_easy_strerror(res));
+      fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
 
     /* Free the list of recipients */
     curl_slist_free_all(recipients);
@@ -113,8 +112,7 @@ std::vector<std::string> Email::build() const {
   std::vector<std::string> result;
 
   auto cur_time = std::chrono::system_clock::now();
-  const std::time_t &time_t_obj =
-      std::chrono::system_clock::to_time_t(cur_time);
+  const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
 
   std::stringstream ss;
   ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
@@ -135,8 +133,7 @@ std::vector<std::string> Email::build() const {
   return result;
 }
 
-size_t Email::payloadCallback(void *ptr, size_t size, size_t nmemb,
-                              void *userp) {
+size_t Email::payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {
   UploadStatus *upload_ctx = (UploadStatus *)userp;
   const char *data;
 
@@ -144,8 +141,7 @@ size_t Email::payloadCallback(void *ptr, size_t size, size_t nmemb,
     return 0;
   }
 
-  if (upload_ctx->lines_read >= 0 &&
-      upload_ctx->lines_read < upload_ctx->email_contents.size()) {
+  if (upload_ctx->lines_read >= 0 && upload_ctx->lines_read < upload_ctx->email_contents.size()) {
     data = upload_ctx->email_contents[upload_ctx->lines_read].c_str();
 
     if (data) {

@@ -14,34 +14,26 @@ static const std::string kTableUrl =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
 
 static const std::unordered_map<smtp::byte, smtp::byte> kDecodeTable = {
-    {'A', 0x0},  {'B', 0x1},  {'C', 0x2},  {'D', 0x3},  {'E', 0x4},
-    {'F', 0x5},  {'G', 0x6},  {'H', 0x7},  {'I', 0x8},  {'J', 0x9},
-    {'K', 0xa},  {'L', 0xb},  {'M', 0xc},  {'N', 0xd},  {'O', 0xe},
-    {'P', 0xf},  {'Q', 0x10}, {'R', 0x11}, {'S', 0x12}, {'T', 0x13},
-    {'U', 0x14}, {'V', 0x15}, {'W', 0x16}, {'X', 0x17}, {'Y', 0x18},
-    {'Z', 0x19}, {'a', 0x1a}, {'b', 0x1b}, {'c', 0x1c}, {'d', 0x1d},
-    {'e', 0x1e}, {'f', 0x1f}, {'g', 0x20}, {'h', 0x21}, {'i', 0x22},
-    {'j', 0x23}, {'k', 0x24}, {'l', 0x25}, {'m', 0x26}, {'n', 0x27},
-    {'o', 0x28}, {'p', 0x29}, {'q', 0x2a}, {'r', 0x2b}, {'s', 0x2c},
-    {'t', 0x2d}, {'u', 0x2e}, {'v', 0x2f}, {'w', 0x30}, {'x', 0x31},
-    {'y', 0x32}, {'z', 0x33}, {'0', 0x34}, {'1', 0x35}, {'2', 0x36},
-    {'3', 0x37}, {'4', 0x38}, {'5', 0x39}, {'6', 0x3a}, {'7', 0x3b},
-    {'8', 0x3c}, {'9', 0x3d}, {'-', 0x3e}, {'_', 0x3f}, {'+', 0x3e},
-    {'/', 0x3f}, {'=', 0x0},
+    {'A', 0x0},  {'B', 0x1},  {'C', 0x2},  {'D', 0x3},  {'E', 0x4},  {'F', 0x5},  {'G', 0x6},
+    {'H', 0x7},  {'I', 0x8},  {'J', 0x9},  {'K', 0xa},  {'L', 0xb},  {'M', 0xc},  {'N', 0xd},
+    {'O', 0xe},  {'P', 0xf},  {'Q', 0x10}, {'R', 0x11}, {'S', 0x12}, {'T', 0x13}, {'U', 0x14},
+    {'V', 0x15}, {'W', 0x16}, {'X', 0x17}, {'Y', 0x18}, {'Z', 0x19}, {'a', 0x1a}, {'b', 0x1b},
+    {'c', 0x1c}, {'d', 0x1d}, {'e', 0x1e}, {'f', 0x1f}, {'g', 0x20}, {'h', 0x21}, {'i', 0x22},
+    {'j', 0x23}, {'k', 0x24}, {'l', 0x25}, {'m', 0x26}, {'n', 0x27}, {'o', 0x28}, {'p', 0x29},
+    {'q', 0x2a}, {'r', 0x2b}, {'s', 0x2c}, {'t', 0x2d}, {'u', 0x2e}, {'v', 0x2f}, {'w', 0x30},
+    {'x', 0x31}, {'y', 0x32}, {'z', 0x33}, {'0', 0x34}, {'1', 0x35}, {'2', 0x36}, {'3', 0x37},
+    {'4', 0x38}, {'5', 0x39}, {'6', 0x3a}, {'7', 0x3b}, {'8', 0x3c}, {'9', 0x3d}, {'-', 0x3e},
+    {'_', 0x3f}, {'+', 0x3e}, {'/', 0x3f}, {'=', 0x0},
 };
 
-const std::string DoBase64Encode(const std::vector<smtp::byte> &data,
-                                 const std::string &table);
+const std::string DoBase64Encode(const std::vector<smtp::byte> &data, const std::string &table);
 const std::string DoBase64EncodeBlock(const std::vector<smtp::byte> &data_block,
-                                      const std::string &table,
-                                      int padding = 0);
+                                      const std::string &table, int padding = 0);
 
 const std::vector<smtp::byte> DoBase64Decode(const std::string &data);
-const std::vector<smtp::byte> DoBase64DecodeBlock(const std::string &data_block,
-                                                  int padding = 0);
+const std::vector<smtp::byte> DoBase64DecodeBlock(const std::string &data_block, int padding = 0);
 
-const std::string
-smtp::Base64::Base64Encode(const std::vector<smtp::byte> &data) {
+const std::string smtp::Base64::Base64Encode(const std::vector<smtp::byte> &data) {
   return DoBase64Encode(data, kTable);
 }
 
@@ -49,8 +41,7 @@ const std::vector<smtp::byte> Base64::Base64Decode(const std::string &data) {
   return DoBase64Decode(data);
 }
 
-const std::string Base64::Base64UrlEncode(const std::vector<smtp::byte> &data,
-                                          bool keep_padding) {
+const std::string Base64::Base64UrlEncode(const std::vector<smtp::byte> &data, bool keep_padding) {
   std::string result = DoBase64Encode(data, kTableUrl);
   if (!keep_padding) {
     result.erase(std::remove(result.begin(), result.end(), '='), result.end());
@@ -62,8 +53,7 @@ const std::vector<smtp::byte> Base64::Base64UrlDecode(const std::string &data) {
   return DoBase64Decode(data);
 }
 
-const std::string DoBase64Encode(const std::vector<smtp::byte> &data,
-                                 const std::string &table) {
+const std::string DoBase64Encode(const std::vector<smtp::byte> &data, const std::string &table) {
   std::string result;
 
   int i = 0;
@@ -121,8 +111,7 @@ const std::vector<smtp::byte> DoBase64Decode(const std::string &data) {
 
 // This function base64 decodes a block of 4 base64 encoded characters.
 // It is assumed that data_block is 4 smtp::bytes in size.
-const std::vector<smtp::byte> DoBase64DecodeBlock(const std::string &data_block,
-                                                  int rem_chars) {
+const std::vector<smtp::byte> DoBase64DecodeBlock(const std::string &data_block, int rem_chars) {
   std::vector<smtp::byte> result(3);
 
   smtp::byte i1 = kDecodeTable.find(data_block[0])->second;
@@ -135,9 +124,7 @@ const std::vector<smtp::byte> DoBase64DecodeBlock(const std::string &data_block,
   result[2] = ((i3 & 0x3) << 6) | i4;
 
   size_t padding_pos = data_block.find_first_of("=");
-  int n_chars = (padding_pos == std::string::npos)
-                    ? rem_chars
-                    : static_cast<int>(padding_pos);
+  int n_chars = (padding_pos == std::string::npos) ? rem_chars : static_cast<int>(padding_pos);
 
   // Padding will either be 2 or 3, since it is not possible to have 1
   // smtp::byte

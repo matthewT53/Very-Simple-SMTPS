@@ -16,9 +16,7 @@ class MimeMock : public smtp::IMime {
 public:
   MimeMock() {}
 
-  void addAttachment(const std::string &p_file) override {
-    m_attachments.push_back(p_file);
-  }
+  void addAttachment(const std::string &p_file) override { m_attachments.push_back(p_file); }
 
   void removeAttachment(const std::string &p_file) override {
     auto it = std::find(m_attachments.begin(), m_attachments.end(), p_file);
@@ -27,9 +25,7 @@ public:
     }
   }
 
-  void addMessage(const std::string &p_message) override {
-    m_messages.push_back(p_message);
-  }
+  void addMessage(const std::string &p_message) override { m_messages.push_back(p_message); }
 
   void removeMessage(const std::string &p_message) override {
     auto it = std::find(m_messages.begin(), m_messages.end(), p_message);
@@ -110,14 +106,11 @@ TEST(EmailTestGroup, BasicEmailTest) {
       "\r\n.\r\n";
 
   const std::string &email_contents = ss.str();
-  CHECK_EQUAL(expected_header,
-              email_contents.substr(0, expected_header.length()));
-  CHECK_EQUAL(
-      expected_body,
-      email_contents.substr(
-          email_contents.find("\r\nHey mate, I have been working here for 5 "
-                              "years now, I think its time for a pay rise."),
-          expected_body.length()));
+  CHECK_EQUAL(expected_header, email_contents.substr(0, expected_header.length()));
+  CHECK_EQUAL(expected_body, email_contents.substr(
+                                 email_contents.find("\r\nHey mate, I have been working here for 5 "
+                                                     "years now, I think its time for a pay rise."),
+                                 expected_body.length()));
 
   mock().checkExpectations();
 }
@@ -158,16 +151,12 @@ TEST(EmailTestGroup, AddAttachmentTest) {
 
   const std::string &email_contents = ss.str();
 
-  CHECK(email_contents.size() >
-        (expected_header.size() + expected_body.size()));
-  CHECK_EQUAL(expected_header,
-              email_contents.substr(0, expected_header.length()));
-  CHECK_EQUAL(
-      expected_body,
-      email_contents.substr(
-          email_contents.find("\r\nHey mate, I have been working here for 5 "
-                              "years now, I think its time for a pay rise."),
-          expected_body.length()));
+  CHECK(email_contents.size() > (expected_header.size() + expected_body.size()));
+  CHECK_EQUAL(expected_header, email_contents.substr(0, expected_header.length()));
+  CHECK_EQUAL(expected_body, email_contents.substr(
+                                 email_contents.find("\r\nHey mate, I have been working here for 5 "
+                                                     "years now, I think its time for a pay rise."),
+                                 expected_body.length()));
 
   mock().checkExpectations();
 }

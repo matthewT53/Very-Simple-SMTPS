@@ -36,9 +36,7 @@ public:
     return static_cast<pointer>(new value_type[num_objects]);
   }
 
-  pointer allocate(size_type num_objects, const_void_pointer hint) {
-    return allocate(num_objects);
-  }
+  pointer allocate(size_type num_objects, const_void_pointer hint) { return allocate(num_objects); }
 
   void deallocate(pointer p, size_type num_objects) {
     std::memset(p, 0x0, num_objects);
@@ -48,7 +46,6 @@ public:
   size_type max_size() const { return std::numeric_limits<size_type>::max(); }
 };
 
-using secure_string =
-    std::basic_string<char, std::char_traits<char>, SecureAllocator<char>>;
+using secure_string = std::basic_string<char, std::char_traits<char>, SecureAllocator<char>>;
 
 } // namespace smtp
