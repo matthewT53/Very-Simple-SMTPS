@@ -19,7 +19,7 @@ tests_exe = executable(
     include_directories : incdir,
     link_with : smtp_lib,
     dependencies : cpputest_dep,
-    cpp_args : ['-Wall', '-Werror']
+    cpp_args : base_cpp_args
 )
 
 test('smtp_lib_tests', tests_exe)

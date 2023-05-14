@@ -4,6 +4,15 @@ project(
     version : '1.0.0',
 )
 
+base_cpp_args = [
+  '-std=c++20',
+  '-Werror',
+  '-Wall',
+  '-Wextra',
+  '-fsanitize=address',
+  '--coverage'
+]
+
 incdir = include_directories('headers')
 
 subdir('src')
