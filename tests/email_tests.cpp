@@ -10,8 +10,6 @@
 #include "email.hpp"
 #include "mime.hpp"
 
-#include "curl/curl.h"
-
 class MimeMock : public smtp::IMime {
 public:
   MimeMock() {}
