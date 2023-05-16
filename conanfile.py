@@ -10,6 +10,7 @@ class VerySimpleSMTPSConan(ConanFile):
     required_packages = [
         "libcurl/8.0.1",
         "cpputest/4.0",
+        "doctest/2.4.11",
     ]
 
     def requirements(self):
