@@ -6,11 +6,14 @@ project(
 
 base_cpp_args = [
   '-std=c++17',
-  # '-Werror',
-  # '-Wall',
-  # '-Wextra',
-  # '-fsanitize=address',
-  # '--coverage'
+  '-Werror',
+  '-Wall',
+  '-Wextra',
+]
+
+base_linker_args = [
+  '-fsanitize=address',
+  '--coverage'
 ]
 
 incdir = include_directories('headers')

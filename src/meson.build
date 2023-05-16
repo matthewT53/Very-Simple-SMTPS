@@ -15,4 +15,5 @@ smtp_lib = shared_library(
     include_directories : incdir,
     dependencies : curl_dep,
     cpp_args : base_cpp_args,
+    link_args: base_linker_args,
 )
