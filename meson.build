@@ -16,7 +16,7 @@ base_linker_args = [
   '--coverage'
 ]
 
-incdir = include_directories('headers')
+incdir = include_directories('src')
 
 subdir('src')
 # subdir('tests')

@@ -9,8 +9,8 @@
 #include <string>
 #include <vector>
 
-#include "mime.hpp"
-#include "secure_strings.hpp"
+#include "mime/mime.hpp"
+#include "utils/secure_strings.hpp"
 
 namespace smtp {
 

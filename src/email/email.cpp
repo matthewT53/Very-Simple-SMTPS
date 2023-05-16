@@ -8,7 +8,7 @@
 #include <sstream>
 #include <string>
 
-#include "email.hpp"
+#include "email/email.hpp"
 
 #include "curl/curl.h"
 

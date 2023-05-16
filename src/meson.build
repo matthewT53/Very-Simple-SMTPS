@@ -3,9 +3,9 @@ curl_dep = dependency(
 )
 
 smtp_srcs = [
-    'email.cpp',
-    'mime.cpp',
-    'base64.cpp'
+    'email/email.cpp',
+    'mime/mime.cpp',
+    'utils/base64/base64.cpp',
 ]
 
 # incdir comes from the meson build in the ./ directory
