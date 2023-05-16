@@ -8,10 +8,6 @@ smtp_srcs = [
     'base64.cpp'
 ]
 
-linker_args = [
-  '-lstdc++fs',
-]
-
 # incdir comes from the meson build in the ./ directory
 smtp_lib = shared_library(
     'smtp_lib',
@@ -19,5 +15,4 @@ smtp_lib = shared_library(
     include_directories : incdir,
     dependencies : curl_dep,
     cpp_args : base_cpp_args,
-    link_args: linker_args,
 )
