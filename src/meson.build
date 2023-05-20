@@ -1,5 +1,6 @@
 curl_dep = dependency(
     'libcurl',
+    required : true
 )
 
 smtp_srcs = [
