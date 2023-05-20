@@ -9,7 +9,7 @@ doctest_dep = dependency(
 )
 
 test_srcs = [
-    'run_tests.cpp',
+    'main.cpp',
     'email/email_tests.cpp',
     'mime/mime_tests.cpp',
     'utils/base64_tests.cpp',
