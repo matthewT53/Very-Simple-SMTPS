@@ -1,4 +1,4 @@
 #!/bin/bash
 
 rm -rf .project-venv
-rm -rf build
+rm -rf .conan
