@@ -8,13 +8,18 @@
 #include <sstream>
 #include <string>
 
-#include "email.hpp"
+#include "email/email.hpp"
 
 #include "curl/curl.h"
 
 namespace smtp {
 
-Email::Email() { m_mime = std::make_unique<smtp::Mime>(); }
+static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
+
+Email::Email(const std::string &user, const std::string &password, const std::string &hostname)
+    : m_smtp_user{user}, m_smtp_password{password}, m_smtp_host{hostname} {
+  m_mime = std::make_unique<smtp::Mime>();
+}
 
 typedef struct _upload_status {
   uint64_t lines_read;
@@ -33,8 +38,6 @@ void Email::send() const {
   curl = curl_easy_init();
 
   if (curl) {
-    std::cout << "Username: " << m_smtp_user << std::endl;
-    std::cout << "Password: " << m_smtp_password << std::endl;
     curl_easy_setopt(curl, CURLOPT_USERNAME, m_smtp_user.c_str());
     curl_easy_setopt(curl, CURLOPT_PASSWORD, m_smtp_password.c_str());
 
@@ -133,7 +136,7 @@ std::vector<std::string> Email::build() const {
   return result;
 }
 
-size_t Email::payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {
+static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {
   UploadStatus *upload_ctx = (UploadStatus *)userp;
   const char *data;
 
@@ -141,11 +144,10 @@ size_t Email::payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp)
     return 0;
   }
 
-  if (upload_ctx->lines_read >= 0 && upload_ctx->lines_read < upload_ctx->email_contents.size()) {
+  if (upload_ctx->lines_read < upload_ctx->email_contents.size()) {
     data = upload_ctx->email_contents[upload_ctx->lines_read].c_str();
 
     if (data) {
-      std::cout << "[+] Data: " << data;
       size_t len = strlen(data);
       memcpy(ptr, data, len);
       upload_ctx->lines_read++;

@@ -3,12 +3,17 @@ cpputest_dep = dependency(
     required : true
 )
 
+doctest_dep = dependency(
+    'doctest',
+    required: true
+)
+
 test_srcs = [
     'run_tests.cpp',
-    'email_tests.cpp',
-    'base64_tests.cpp',
-    'mime_tests.cpp',
-    'secure_strings_tests.cpp'
+    'email/email_tests.cpp',
+    'mime/mime_tests.cpp',
+    'utils/base64_tests.cpp',
+    'utils/secure_strings_tests.cpp'
 ]
 
 # incdir is inherited from the root meson.build file.
@@ -18,8 +23,8 @@ tests_exe = executable(
     test_srcs,
     include_directories : incdir,
     link_with : smtp_lib,
-    dependencies : cpputest_dep,
-    cpp_args : ['-Wall', '-Werror']
+    dependencies : [cpputest_dep, doctest_dep],
+    cpp_args : base_cpp_args
 )
 
 test('smtp_lib_tests', tests_exe)

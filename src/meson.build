@@ -4,9 +4,9 @@ curl_dep = dependency(
 )
 
 smtp_srcs = [
-    'email.cpp',
-    'mime.cpp',
-    'base64.cpp'
+    'email/email.cpp',
+    'mime/mime.cpp',
+    'utils/base64/base64.cpp',
 ]
 
 # incdir comes from the meson build in the ./ directory
@@ -15,5 +15,6 @@ smtp_lib = shared_library(
     smtp_srcs,
     include_directories : incdir,
     dependencies : curl_dep,
-    cpp_args : ['-Wall', '-Werror', '-lstdc++fs']
+    cpp_args : base_cpp_args,
+    link_args: base_linker_args,
 )

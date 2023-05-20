@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 
-#include "mime_abstract.hpp"
+#include "mime/mime_abstract.hpp"
 
 namespace smtp {
 

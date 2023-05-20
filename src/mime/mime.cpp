@@ -4,8 +4,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "base64.hpp"
-#include "mime.hpp"
+#include "mime/mime.hpp"
+#include "utils/base64/base64.hpp"
 
 namespace smtp {
 
