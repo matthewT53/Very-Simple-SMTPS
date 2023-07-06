@@ -1,4 +1,4 @@
-#include "CppUTest/TestHarness.h"
+#include "doctest/doctest.h"
 
 #include <filesystem>
 #include <fstream>
@@ -6,7 +6,7 @@
 #include <sstream>
 #include <string>
 
-#include "mime.hpp"
+#include "mime/mime.hpp"
 
 namespace fs = std::filesystem;
 
@@ -14,12 +14,14 @@ static const std::string &kTextPath = "test_data/test.txt";
 static const std::string &kBinaryPath = "test_data/test.bin";
 static const std::string &kLargeBinaryPath = "test_data/large.bin";
 
-TEST_GROUP(MimeTests) {
+class MimeTestsFixture {
+protected:
   std::ofstream m_text;
   std::ofstream m_binary;
   std::ofstream m_large;
 
-  void setup() {
+public:
+  MimeTestsFixture() {
     m_text = std::ofstream(kTextPath);
     if (!m_text) {
       throw std::runtime_error("Unable to open: " + kTextPath);
@@ -54,11 +56,9 @@ TEST_GROUP(MimeTests) {
     m_binary.close();
     m_large.close();
   }
-
-  void teardown() {}
 };
 
-TEST(MimeTests, BasicUseTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Basic use test") {
   smtp::Mime m("test_user_agent");
   std::stringstream ss;
   ss << m;
@@ -66,10 +66,10 @@ TEST(MimeTests, BasicUseTest) {
   const std::string &actual = ss.str();
   const std::string &expected = "";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, NoAttachmentsTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "No attachments test") {
   const std::string &message = "This is a test message placed inside the body.";
   smtp::Mime m("test_user_agent");
   m.addMessage(message);
@@ -92,10 +92,10 @@ TEST(MimeTests, NoAttachmentsTest) {
                                 "\r\n" +
                                 message + "\r\n" + smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, TextFileAttachmentTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Text file attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kTextPath);
   m.build();
@@ -125,10 +125,10 @@ TEST(MimeTests, TextFileAttachmentTest) {
                                 "\r\n\r\n" +
                                 smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, BinaryAttachmentTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Bianry attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kBinaryPath);
   m.build();
@@ -157,10 +157,10 @@ TEST(MimeTests, BinaryAttachmentTest) {
                                 "\r\n" +
                                 smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, MultipleAttachmentTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Multiple attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kTextPath);
   m.addAttachment(kBinaryPath);
@@ -203,10 +203,10 @@ TEST(MimeTests, MultipleAttachmentTest) {
                                 "\r\n" +
                                 smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, RemoveAttachmentTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Remove attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kTextPath);
   m.addAttachment(kBinaryPath);
@@ -238,10 +238,10 @@ TEST(MimeTests, RemoveAttachmentTest) {
                                 "\r\n" +
                                 smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
 
-TEST(MimeTests, VeryLargeAttachmentTest) {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Very large attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kLargeBinaryPath);
   m.build();
@@ -343,5 +343,5 @@ TEST(MimeTests, VeryLargeAttachmentTest) {
       "\r\n" +
       smtp::Mime::kBoundary + "\r\n";
 
-  CHECK_EQUAL(expected, actual);
+  REQUIRE(expected == actual);
 }
