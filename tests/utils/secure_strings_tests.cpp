@@ -11,7 +11,7 @@ TEST_SUITE("Secure strings") {
     smtp::secure_string *password = new smtp::secure_string(expected);
 
     void *ptr = password->data();
-    CHECK_TRUE(std::memcmp(password->data(), expected.data(), expected.size()) == 0);
+    CHECK(std::memcmp(password->data(), expected.data(), expected.size()) == 0);
 
     int len = static_cast<int>(expected.size());
     char arr[len] = {0x0};

@@ -70,7 +70,7 @@ private:
 TEST_SUITE("Email tests") {
   TEST_CASE("Basic email test") {
     // mock().expectOneCall("build");
-    smtp::Email email;
+    smtp::Email email("user", "password", "hostname");
 
     std::unique_ptr<smtp::IMime> m = std::make_unique<MimeMock>();
     email.setMimeDocument(m);
@@ -109,7 +109,7 @@ TEST_SUITE("Email tests") {
 
   TEST_CASE("Add attachment test") {
     // mock().expectOneCall("build");
-    smtp::Email email;
+    smtp::Email email("user", "password", "hostname");
 
     std::unique_ptr<smtp::IMime> m = std::make_unique<MimeMock>();
     email.setMimeDocument(m);
