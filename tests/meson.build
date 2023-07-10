@@ -23,6 +23,7 @@ tests_exe = executable(
     test_srcs,
     include_directories : incdir,
     link_with : smtp_lib,
+    link_args : base_linker_args,
     dependencies : [cpputest_dep, doctest_dep],
     cpp_args : base_cpp_args
 )
