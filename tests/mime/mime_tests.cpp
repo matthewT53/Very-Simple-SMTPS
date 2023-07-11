@@ -15,29 +15,26 @@ static const std::string &kBinaryPath = "test_data/test.bin";
 static const std::string &kLargeBinaryPath = "test_data/large.bin";
 
 class MimeTestsFixture {
-protected:
-  std::ofstream m_text;
-  std::ofstream m_binary;
-  std::ofstream m_large;
-
 public:
   MimeTestsFixture() {
-    m_text = std::ofstream(kTextPath);
-    if (!m_text) {
+    std::ofstream text_file(kTextPath);
+    if (!text_file.is_open()) {
       throw std::runtime_error("Unable to open: " + kTextPath);
     }
-    m_text << "This is some test data for the file.";
+    text_file << "This is some test data for the file.";
+    text_file.close();
 
-    m_binary = std::ofstream(kBinaryPath);
-    if (!m_binary) {
+    std::ofstream binary_file(kBinaryPath);
+    if (!binary_file) {
       throw std::runtime_error("Unable to open: " + kBinaryPath);
     }
 
-    m_binary << "\x90\x12\x87\x85\x43\x65\x10\x12\x65\x90\x34\x23\x25\x65\x41"
-                "\x42\x43\xf9";
+    binary_file << "\x90\x12\x87\x85\x43\x65\x10\x12\x65\x90\x34\x23\x25\x65\x41"
+                   "\x42\x43\xf9";
+    binary_file.close();
 
-    m_large = std::ofstream(kLargeBinaryPath);
-    if (!m_large) {
+    std::ofstream large_file(kLargeBinaryPath);
+    if (!large_file) {
       throw std::runtime_error("Unable to open: " + kLargeBinaryPath);
     }
 
@@ -48,13 +45,8 @@ public:
       }
     }
 
-    m_large << s;
-
-    // Close the stream here otherwise, we can't read from these files with an
-    // input stream.
-    m_text.close();
-    m_binary.close();
-    m_large.close();
+    large_file << s;
+    large_file.close();
   }
 };
 
@@ -128,7 +120,7 @@ TEST_CASE_FIXTURE(MimeTestsFixture, "Text file attachment test") {
   REQUIRE(expected == actual);
 }
 
-TEST_CASE_FIXTURE(MimeTestsFixture, "Bianry attachment test") {
+TEST_CASE_FIXTURE(MimeTestsFixture, "Binary attachment test") {
   smtp::Mime m("test_user_agent");
   m.addAttachment(kBinaryPath);
   m.build();
