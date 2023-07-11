@@ -1,8 +1,3 @@
-cpputest_dep = dependency(
-    'cpputest',
-    required : true
-)
-
 doctest_dep = dependency(
     'doctest',
     required: true
@@ -24,7 +19,7 @@ tests_exe = executable(
     include_directories : incdir,
     link_with : smtp_lib,
     link_args : base_linker_args,
-    dependencies : [cpputest_dep, doctest_dep],
+    dependencies : [doctest_dep],
     cpp_args : base_cpp_args
 )
 
