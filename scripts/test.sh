@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ ! -d test_data ]; then
-    mkdir test_data
+if [ ! -d .conan/test_data ]; then
+    mkdir .conan/test_data
 fi
-./build/tests/smtp_tests -c
+cd .conan ; meson test -v

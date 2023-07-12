@@ -1,154 +1,152 @@
-#include "CppUTest/TestHarness.h"
+#include "doctest/doctest.h"
 
 #include <cstdint>
 #include <iostream>
 #include <vector>
 
-#include "base64.hpp"
+#include "utils/base64/base64.hpp"
 
 using byte = uint8_t;
 
-TEST_GROUP(Base64EncodingTests){};
+using namespace smtp;
 
-TEST(Base64EncodingTests, BasicEncodingTest) {
-  const std::vector<byte> data = {'a', 'a', 'a'};
-  const std::string encoded = smtp::Base64::Base64Encode(data);
+TEST_SUITE("Basic b64 encoding") {
+  TEST_CASE("Basic encoding test") {
+    const std::vector<byte> data = {'a', 'a', 'a'};
+    const std::string encoded = Base64::Base64Encode(data);
 
-  CHECK_EQUAL(std::string("YWFh"), encoded);
+    REQUIRE(encoded == "YWFh");
+  }
+
+  TEST_CASE("One padding character test") {
+    const std::vector<byte> data = {'a', 'a', 'a', 'a', 'a'};
+    const std::string encoded = Base64::Base64Encode(data);
+
+    REQUIRE(encoded == "YWFhYWE=");
+  }
+
+  TEST_CASE("Two padding character test") {
+    const std::vector<byte> data = {'a', 'a', 'a', 'a'};
+    const std::string encoded = Base64::Base64Encode(data);
+
+    REQUIRE(encoded == "YWFhYQ==");
+  }
+
+  TEST_CASE("Basic example") {
+    const std::string text = "what does it take for a boar to soar?";
+    const std::vector<byte> data(text.begin(), text.end());
+    const std::string encoded = Base64::Base64Encode(data);
+
+    REQUIRE(encoded == "d2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyPw==");
+  }
+
+  TEST_CASE("Encoding binary data test") {
+    const std::vector<byte> data = {0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0xa};
+    const std::string encoded = Base64::Base64Encode(data);
+
+    REQUIRE(encoded == "kJCQgHUSCg==");
+  }
+
+  TEST_CASE("Encoding an empty string") {
+    const std::string encoded = Base64::Base64Encode({});
+    CHECK(encoded.empty());
+  }
 }
 
-TEST(Base64EncodingTests, OnePaddingCharacterTest) {
-  const std::vector<byte> data = {'a', 'a', 'a', 'a', 'a'};
-  const std::string encoded = smtp::Base64::Base64Encode(data);
+TEST_SUITE("Base64 url encoding") {
+  TEST_CASE("Basic url encoding") {
+    const std::string text = "hey mate how are you doing? good day today?";
+    const std::vector<byte> data(text.begin(), text.end());
+    const std::string encoded = Base64::Base64UrlEncode(data);
 
-  CHECK_EQUAL(std::string("YWFhYWE="), encoded);
+    REQUIRE(encoded == "aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw");
+  }
+
+  TEST_CASE("Padding is removed") {
+    const std::string text = "what is the time?";
+    const std::vector<byte> data(text.begin(), text.end());
+    const std::string encoded = Base64::Base64UrlEncode(data);
+
+    REQUIRE(encoded == "d2hhdCBpcyB0aGUgdGltZT8");
+  }
 }
 
-TEST(Base64EncodingTests, TwoPaddingCharacterTest) {
-  const std::vector<byte> data = {'a', 'a', 'a', 'a'};
-  const std::string encoded = smtp::Base64::Base64Encode(data);
+TEST_SUITE("Base64 decoding") {
+  TEST_CASE("Basic decoding test") {
+    const std::string data = "YWFh";
+    const std::vector<byte> data_bytes = Base64::Base64Decode(data);
+    const std::string result(data_bytes.begin(), data_bytes.end());
 
-  CHECK_EQUAL(std::string("YWFhYQ=="), encoded);
+    REQUIRE(result == "aaa");
+  }
+
+  TEST_CASE("Decode string with padding characters") {
+    const std::string data = "QXJlIHdlIHJlYWxseSBmcmVlPw==";
+    const std::vector<byte> data_bytes = Base64::Base64Decode(data);
+    const std::string result(data_bytes.begin(), data_bytes.end());
+
+    REQUIRE(result == "Are we really free?");
+  }
+
+  TEST_CASE("Binary data decode test") {
+    const std::string data = "hnOQkJCAdRIICg==";
+    const std::vector<byte> result = Base64::Base64Decode(data);
+    const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08, 0xa};
+
+    REQUIRE(result == expected);
+  }
+
+  TEST_CASE("Decode string with one padding character") {
+    const std::string data = "V2hhdCBhcmUgeW91IGRvaW5nIGZyaWVuZD8=";
+    const std::vector<byte> data_bytes = Base64::Base64Decode(data);
+    const std::string result(data_bytes.begin(), data_bytes.end());
+
+    REQUIRE(result == "What are you doing friend?");
+  }
+
+  TEST_CASE("Empty string test") {
+    const std::vector<byte> result = Base64::Base64Decode("");
+    REQUIRE(result.empty());
+  }
 }
 
-TEST(Base64EncodingTests, TypicalExampleTest) {
-  const std::string text = "what does it take for a boar to soar?";
-  const std::vector<byte> data(text.begin(), text.end());
-  const std::string encoded = smtp::Base64::Base64Encode(data);
+TEST_SUITE("Base64 url decoding tests") {
+  TEST_CASE("Basic base64 url decoding test") {
+    const std::string data = "aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw";
+    const std::vector<byte> result = Base64::Base64UrlDecode(data);
+    const std::string actual(result.begin(), result.end());
 
-  CHECK_EQUAL(std::string("d2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyPw=="), encoded);
-}
+    REQUIRE(actual == "hey mate how are you doing? good day today?");
+  }
 
-TEST(Base64EncodingTests, BinaryDataTest) {
-  const std::vector<byte> data = {0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0xa};
-  const std::string encoded = smtp::Base64::Base64Encode(data);
+  TEST_CASE("Decode ba64 url encoded string that has no padding") {
+    const std::string data =
+        "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGluIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYX"
+        "kgc"
+        "2lyPz8_IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQgbWUgaW4gbmV3IHlvcms_"
+        "IFNlZSB5b3Ugc29vbg";
+    const std::vector<byte> result = Base64::Base64UrlDecode(data);
+    const std::string actual(result.begin(), result.end());
 
-  CHECK_EQUAL(std::string("kJCQgHUSCg=="), encoded);
-}
+    REQUIRE(actual == "What does it take for a boar to soar in New York. Are you well today sir??? "
+                      "Well if you are then you please visit me in new york? See you soon");
+  }
 
-TEST(Base64EncodingTests, EmptyStringTest) {
-  const std::string encoded = smtp::Base64::Base64Encode({});
-  CHECK(encoded.empty());
-}
+  TEST_CASE("Decode b64 url encoded string that has padding") {
+    const std::string data =
+        "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGluIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYX"
+        "kgc"
+        "2lyPz8_IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQgbWUgaW4gbmV3IHlvcms_"
+        "IFNlZSB5b3Ugc29vbg==";
+    const std::vector<byte> result = Base64::Base64UrlDecode(data);
+    const std::string actual(result.begin(), result.end());
 
-TEST_GROUP(Base64UrlEncodingTests){};
+    REQUIRE(actual == "What does it take for a boar to soar in New York. Are you well today sir??? "
+                      "Well if you are then you please visit me in new york? See you soon");
+  }
 
-TEST(Base64UrlEncodingTests, BasicEncodingTest) {
-  const std::string text = "hey mate how are you doing? good day today?";
-  const std::vector<byte> data(text.begin(), text.end());
-  const std::string encoded = smtp::Base64::Base64UrlEncode(data);
-
-  CHECK_EQUAL(std::string("aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw"), encoded);
-}
-
-TEST(Base64UrlEncodingTests, PaddingRemovalTest) {
-  const std::string text = "what is the time?";
-  const std::vector<byte> data(text.begin(), text.end());
-  const std::string encoded = smtp::Base64::Base64UrlEncode(data);
-
-  CHECK_EQUAL(std::string("d2hhdCBpcyB0aGUgdGltZT8"), encoded);
-}
-
-TEST_GROUP(Base64DecodingTests){};
-
-TEST(Base64DecodingTests, BasicDecodingTest) {
-  const std::string data = "YWFh";
-  const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
-  const std::string result(data_bytes.begin(), data_bytes.end());
-
-  CHECK_EQUAL(std::string("aaa"), result);
-}
-
-TEST(Base64DecodingTests, DecodePaddingTest) {
-  const std::string data = "QXJlIHdlIHJlYWxseSBmcmVlPw==";
-  const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
-  const std::string result(data_bytes.begin(), data_bytes.end());
-
-  CHECK_EQUAL(std::string("Are we really free?"), result);
-}
-
-TEST(Base64DecodingTests, BinaryDataDecodeTest) {
-  const std::string data = "hnOQkJCAdRIICg==";
-  const std::vector<byte> result = smtp::Base64::Base64Decode(data);
-  const std::vector<byte> expected = {0x86, 0x73, 0x90, 0x90, 0x90, 0x80, 0x75, 0x12, 0x08, 0xa};
-
-  CHECK(expected == result);
-}
-
-TEST(Base64DecodingTests, DecodeOnePaddingTest) {
-  const std::string data = "V2hhdCBhcmUgeW91IGRvaW5nIGZyaWVuZD8=";
-  const std::vector<byte> data_bytes = smtp::Base64::Base64Decode(data);
-  const std::string result(data_bytes.begin(), data_bytes.end());
-
-  CHECK_EQUAL(std::string("What are you doing friend?"), result);
-}
-
-TEST(Base64DecodingTests, EmptyStringTest) {
-  const std::vector<byte> result = smtp::Base64::Base64Decode("");
-  CHECK(result.empty());
-}
-
-TEST_GROUP(Base64UrlDecodingTests){};
-
-TEST(Base64UrlDecodingTests, BasicDecodingTest) {
-  const std::string data = "aGV5IG1hdGUgaG93IGFyZSB5b3UgZG9pbmc_IGdvb2QgZGF5IHRvZGF5Pw";
-  const std::vector<byte> result = smtp::Base64::Base64UrlDecode(data);
-  const std::string actual(result.begin(), result.end());
-
-  CHECK_EQUAL(std::string("hey mate how are you doing? good day today?"), actual);
-}
-
-TEST(Base64UrlDecodingTests, DecodePaddingTest) {
-  const std::string data = "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGl"
-                           "uIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYXkgc"
-                           "2lyPz8_"
-                           "IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQ"
-                           "gbWUgaW4gbmV3IHlvcms_IFNlZSB5b3Ugc29vbg";
-  const std::vector<byte> result = smtp::Base64::Base64UrlDecode(data);
-  const std::string actual(result.begin(), result.end());
-
-  CHECK_EQUAL(std::string("What does it take for a boar to soar in New York. "
-                          "Are you well today sir??? Well if you are then you "
-                          "please visit me in new york? See you soon"),
-              actual);
-}
-
-TEST(Base64UrlDecodingTests, DecodeWithPaddingTest) {
-  const std::string data = "V2hhdCBkb2VzIGl0IHRha2UgZm9yIGEgYm9hciB0byBzb2FyIGl"
-                           "uIE5ldyBZb3JrLiBBcmUgeW91IHdlbGwgdG9kYXkgc"
-                           "2lyPz8_"
-                           "IFdlbGwgaWYgeW91IGFyZSB0aGVuIHlvdSBwbGVhc2UgdmlzaXQ"
-                           "gbWUgaW4gbmV3IHlvcms_IFNlZSB5b3Ugc29vbg==";
-  const std::vector<byte> result = smtp::Base64::Base64UrlDecode(data);
-  const std::string actual(result.begin(), result.end());
-
-  CHECK_EQUAL(std::string("What does it take for a boar to soar in New York. "
-                          "Are you well today sir??? Well if you are then you "
-                          "please visit me in new york? See you soon"),
-              actual);
-}
-
-TEST(Base64UrlDecodingTests, EmptyStringTest) {
-  const std::vector<byte> result = smtp::Base64::Base64UrlDecode("");
-  CHECK(result.empty());
+  TEST_CASE("Empty string test") {
+    const std::vector<byte> result = Base64::Base64UrlDecode("");
+    REQUIRE(result.empty());
+  }
 }

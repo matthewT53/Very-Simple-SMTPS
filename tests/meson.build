@@ -1,15 +1,10 @@
-cpputest_dep = dependency(
-    'cpputest',
-    required : true
-)
-
 doctest_dep = dependency(
     'doctest',
     required: true
 )
 
 test_srcs = [
-    'run_tests.cpp',
+    'main.cpp',
     'email/email_tests.cpp',
     'mime/mime_tests.cpp',
     'utils/base64_tests.cpp',
@@ -23,7 +18,8 @@ tests_exe = executable(
     test_srcs,
     include_directories : incdir,
     link_with : smtp_lib,
-    dependencies : [cpputest_dep, doctest_dep],
+    link_args : base_linker_args,
+    dependencies : [doctest_dep],
     cpp_args : base_cpp_args
 )
 
