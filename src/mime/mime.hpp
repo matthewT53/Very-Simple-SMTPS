@@ -1,33 +1,27 @@
 #pragma once
 
+#include <exception>
 #include <iostream>
 #include <string>
 #include <vector>
 
-#include "mime/mime_abstract.hpp"
-
 namespace smtp {
 
-class Mime : public smtp::IMime {
+class MimeAttachmentException : public std::runtime_error {
 public:
-  Mime(const std::string &p_user_agent = "test bot");
+  using runtime_error::runtime_error;
+};
 
-  // Adds a file specified by t_filename as an attachment to this mime message
-  void addAttachment(const std::string &p_filename) override;
+class Mime {
+public:
+  explicit Mime(const std::string &user_agent = "test bot");
 
-  // Removes the attachment specified by filename from this Mime document
-  void removeAttachment(const std::string &p_filename) override;
+  void addAttachment(const std::string &filename);
+  void removeAttachment(const std::string &filename);
+  void addMessage(const std::string &message);
+  void removeMessage(const std::string &message);
 
-  // Adds a body to the email address
-  void addMessage(const std::string &p_message) override;
-
-  // Removes the body message specified by the message contents from this Mime
-  // document
-  void removeMessage(const std::string &p_message) override;
-
-  // Constructs the mime message with the version, user agent as well as any
-  // attachments
-  std::vector<std::string> build() const override;
+  std::vector<std::string> build() const;
 
   static const std::string kBoundaryDeclare;
   static const std::string kBoundary;
@@ -35,7 +29,7 @@ public:
   static const std::string kCRLF;
 
 protected:
-  std::ostream &output(std::ostream &p_out) const override;
+  std::ostream &output(std::ostream &out) const;
 
 private:
   std::vector<std::string> m_files;
@@ -43,9 +37,9 @@ private:
 
   std::string m_user_agent;
 
-  void buildHeader(std::vector<std::string> &p_contents) const;
-  void buildMessages(std::vector<std::string> &p_contents) const;
-  void buildAttachments(std::vector<std::string> &p_contents) const;
+  void buildHeader(std::vector<std::string> &contents) const;
+  void buildMessages(std::vector<std::string> &contents) const;
+  void buildAttachments(std::vector<std::string> &contents) const;
 };
 
 } // namespace smtp

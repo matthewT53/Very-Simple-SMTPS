@@ -16,20 +16,18 @@ namespace smtp {
 
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
 
-Email::Email(const std::string &user, const std::string &password, const std::string &hostname)
-    : m_smtp_user{user}, m_smtp_password{password}, m_smtp_host{hostname} {
-  m_mime = std::make_unique<smtp::Mime>();
-}
+Email::Email(const EmailParams &params)
+    : m_smtp_user{params.user}, m_smtp_password{params.password}, m_smtp_host{params.hostname} {}
 
-typedef struct _upload_status {
+struct UploadStatus {
   uint64_t lines_read;
   std::vector<std::string> email_contents;
-} UploadStatus;
+};
 
 void Email::send() const {
   CURL *curl = nullptr;
   CURLcode res = CURLE_OK;
-  struct curl_slist *recipients = NULL;
+  struct curl_slist *recipients = nullptr;
   UploadStatus upload_ctx;
 
   upload_ctx.email_contents = build();
@@ -100,8 +98,9 @@ void Email::send() const {
     res = curl_easy_perform(curl);
 
     /* Check for errors */
-    if (res != CURLE_OK)
+    if (res != CURLE_OK) {
       fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }
 
     /* Free the list of recipients */
     curl_slist_free_all(recipients);
@@ -126,20 +125,22 @@ std::vector<std::string> Email::build() const {
   result.push_back("Subject: " + m_subject + "\r\n");
   result.push_back(ss.str() + "\r\n");
 
-  std::vector<std::string> mime_lines = m_mime->build();
-  for (const auto &line : mime_lines)
+  std::vector<std::string> mime_lines = m_mime.build();
+  for (const auto &line : mime_lines) {
     result.push_back(line);
+  }
 
   result.push_back(smtp::Mime::kLastBoundary);
-  result.push_back("\r\n.\r\n");
+  result.emplace_back("\r\n.\r\n");
 
   return result;
 }
 
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {
-  UploadStatus *upload_ctx = (UploadStatus *)userp;
-  const char *data;
+  auto *upload_ctx = static_cast<UploadStatus *>(userp);
+  const char *data = nullptr;
 
+  // No more data to send
   if ((size == 0) || (nmemb == 0) || ((size * nmemb) < 1)) {
     return 0;
   }

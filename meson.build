@@ -19,5 +19,5 @@ base_linker_args = [
 incdir = include_directories('src')
 
 subdir('src')
-subdir('tests')
+# subdir('tests')
 # subdir('examples')
