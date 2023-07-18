@@ -14,14 +14,12 @@ public:
 
 class Mime {
 public:
-  explicit Mime(const std::string &user_agent = "test bot");
+  explicit Mime(const std::string &user_agent = "Very-Simple-SMTPS");
 
-  void addAttachment(const std::string &filename);
-  void removeAttachment(const std::string &filename);
+  void addAttachment(const std::string &attachment_path, const std::string &contents_b64);
   void addMessage(const std::string &message);
-  void removeMessage(const std::string &message);
 
-  std::vector<std::string> build() const;
+  std::vector<std::string> build() const { return m_document; }
 
   static const std::string kBoundaryDeclare;
   static const std::string kBoundary;
@@ -32,14 +30,10 @@ protected:
   std::ostream &output(std::ostream &out) const;
 
 private:
-  std::vector<std::string> m_files;
-  std::vector<std::string> m_messages;
-
+  std::vector<std::string> m_document;
   std::string m_user_agent;
 
-  void buildHeader(std::vector<std::string> &contents) const;
-  void buildMessages(std::vector<std::string> &contents) const;
-  void buildAttachments(std::vector<std::string> &contents) const;
+  void buildHeader();
 };
 
 } // namespace smtp

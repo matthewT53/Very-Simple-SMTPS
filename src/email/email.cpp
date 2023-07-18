@@ -9,20 +9,62 @@
 #include <string>
 
 #include "email/email.hpp"
+#include "mime/mime.hpp"
 
 #include "curl/curl.h"
 
 namespace smtp {
+
+struct UploadStatus {
+  uint64_t lines_read;
+  std::vector<std::string> email_contents;
+};
 
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
 
 Email::Email(const EmailParams &params)
     : m_smtp_user{params.user}, m_smtp_password{params.password}, m_smtp_host{params.hostname} {}
 
-struct UploadStatus {
-  uint64_t lines_read;
-  std::vector<std::string> email_contents;
-};
+void Email::addAttachment(const Attachment &attachment) { m_attachments.push_back(attachment); }
+void Email::removeAttachment(const Attachment &attachment) {
+  (void)std::remove(m_attachments.begin(), m_attachments.end(), attachment);
+}
+
+std::vector<std::string> Email::build() const {
+  // Mime document with possible attachments
+  std::vector<std::string> result;
+
+  auto cur_time = std::chrono::system_clock::now();
+  const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
+
+  std::stringstream ss;
+  ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
+
+  result.push_back("To: " + m_to + "\r\n");
+  result.push_back("From: " + m_from + "\r\n");
+  result.push_back("Cc: " + m_cc + "\r\n");
+  result.push_back("Subject: " + m_subject + "\r\n");
+  result.push_back(ss.str() + "\r\n");
+
+  smtp::Mime m_mime;
+  m_mime.addMessage(m_body);
+
+  // build the attachments
+  for (const auto &attachment : m_attachments) {
+    m_mime.addAttachment(attachment.getFilePath(), attachment.getContentsAsB64());
+  }
+
+  // build the whole email
+  std::vector<std::string> mime_lines = m_mime.build();
+  for (const auto &line : mime_lines) {
+    result.push_back(line);
+  }
+
+  result.push_back(smtp::Mime::kLastBoundary);
+  result.emplace_back("\r\n.\r\n");
+
+  return result;
+}
 
 void Email::send() const {
   CURL *curl = nullptr;
@@ -108,32 +150,6 @@ void Email::send() const {
     /* Always cleanup */
     curl_easy_cleanup(curl);
   }
-}
-
-std::vector<std::string> Email::build() const {
-  std::vector<std::string> result;
-
-  auto cur_time = std::chrono::system_clock::now();
-  const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
-
-  std::stringstream ss;
-  ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
-
-  result.push_back("To: " + m_to + "\r\n");
-  result.push_back("From: " + m_from + "\r\n");
-  result.push_back("Cc: " + m_cc + "\r\n");
-  result.push_back("Subject: " + m_subject + "\r\n");
-  result.push_back(ss.str() + "\r\n");
-
-  std::vector<std::string> mime_lines = m_mime.build();
-  for (const auto &line : mime_lines) {
-    result.push_back(line);
-  }
-
-  result.push_back(smtp::Mime::kLastBoundary);
-  result.emplace_back("\r\n.\r\n");
-
-  return result;
 }
 
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {

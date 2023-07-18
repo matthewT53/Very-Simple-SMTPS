@@ -5,12 +5,11 @@
 
 #pragma once
 
-#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
 
-#include "mime/mime.hpp"
+#include "attachment/attachment.hpp"
 #include "utils/secure_strings.hpp"
 
 namespace smtp {
@@ -29,13 +28,10 @@ public:
   void setFrom(std::string_view from) { m_from = from; }
   void setCc(std::string_view cc) { m_cc = cc; }
   void setSubject(std::string_view subject) { m_subject = subject; }
-  void setBody(std::string_view body) {
-    m_body = body;
-    m_mime.addMessage(m_body);
-  }
+  void setBody(std::string_view body) { m_body = body; }
 
-  void addAttachment(const std::string &attachment) { m_mime.addAttachment(attachment); }
-  void removeAttachment(const std::string &attachment) { m_mime.removeAttachment(attachment); }
+  void addAttachment(const Attachment &attachment);
+  void removeAttachment(const Attachment &attachment);
 
   void clear();
   void send() const;
@@ -53,8 +49,7 @@ private:
   std::string m_subject;
   std::string m_body;
 
-  // Mime document with possible attachments
-  smtp::Mime m_mime;
+  std::vector<Attachment> m_attachments;
 
   std::vector<std::string> build() const;
 
