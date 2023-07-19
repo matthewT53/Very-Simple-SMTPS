@@ -18,6 +18,7 @@ public:
   explicit Attachment(const std::string &file_path);
 
   std::string getFilePath() const { return m_file_path; }
+  void setFiilePath(const std::string &file_path) { m_file_path = file_path; }
 
   std::string getContentsAsB64() const;
   void setContents(const std::vector<uint8_t> &contents);

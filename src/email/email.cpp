@@ -30,6 +30,16 @@ void Email::removeAttachment(const Attachment &attachment) {
   (void)std::remove(m_attachments.begin(), m_attachments.end(), attachment);
 }
 
+void Email::removeAttachment(std::string_view file_path) {
+  const auto &checkFilePath = [&file_path](const Attachment &attachment) {
+    return attachment.getFilePath() == file_path;
+  };
+  if (const auto &it = std::find_if(m_attachments.begin(), m_attachments.end(), checkFilePath);
+      it != m_attachments.end()) {
+    m_attachments.erase(it);
+  }
+}
+
 std::vector<std::string> Email::build() const {
   // Mime document with possible attachments
   std::vector<std::string> result;
@@ -174,6 +184,20 @@ static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp)
   }
 
   return 0;
+}
+
+void Email::clear() {
+  m_smtp_user.clear();
+  m_smtp_password.clear();
+  m_smtp_host.clear();
+
+  m_to.clear();
+  m_from.clear();
+  m_cc.clear();
+  m_subject.clear();
+  m_body.clear();
+
+  m_attachments.clear();
 }
 
 } // namespace smtp

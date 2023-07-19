@@ -32,6 +32,7 @@ public:
 
   void addAttachment(const Attachment &attachment);
   void removeAttachment(const Attachment &attachment);
+  void removeAttachment(std::string_view file_path);
 
   void clear();
   void send() const;
