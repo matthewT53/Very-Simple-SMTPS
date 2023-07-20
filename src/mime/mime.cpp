@@ -60,12 +60,4 @@ void Mime::addAttachment(const std::string &attachment_path, const std::string &
   m_document.emplace_back("\r\n");
 }
 
-std::ostream &Mime::output(std::ostream &out) const {
-  std::string contents;
-  for (const std::string &line : build()) {
-    contents += line;
-  }
-  return out << contents;
-}
-
 } // namespace smtp

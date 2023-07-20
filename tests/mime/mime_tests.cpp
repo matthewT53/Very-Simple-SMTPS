@@ -8,6 +8,8 @@
 #include "mime/mime.hpp"
 #include "utils/base64/base64.hpp"
 
+using Base64 = smtp::Base64;
+
 static std::string getLargeData() {
   std::string s;
   for (int i = 0; i < 8; i++) {
@@ -16,11 +18,11 @@ static std::string getLargeData() {
     }
   }
 
-  return s;
+  return Base64::Base64Encode(s);
 }
 
 static const std::string kSmallData = Base64::Base64Encode("This is some test data for the file.");
-static const std::string kBianryData = Base64::Base64Encode(
+static const std::string kBinaryData = Base64::Base64Encode(
     "\x90\x12\x87\x85\x43\x65\x10\x12\x65\x90\x34\x23\x25\x65\x41\x42\x43\xf9");
 static const std::string kLargeBinaryData = getLargeData();
 
@@ -96,16 +98,15 @@ TEST_SUITE("Mime tests") {
   }
 
   TEST_CASE("Binary attachment test") {
-    const std::string &file_path = "/path/test_small.bin";
+    const std::string &bin_filename = "/path/test_small.bin";
 
     smtp::Mime m("test_user_agent");
-    m.addAttachment(file_path, );
+    m.addAttachment(bin_filename, kBinaryData);
     m.build();
 
     std::stringstream ss;
     ss << m;
 
-    const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
     const std::string &actual = ss.str();
     const std::string &expected = "User-Agent: test_user_agent\r\n"
                                   "MIME-Version: 1.0\r\n"
@@ -130,16 +131,16 @@ TEST_SUITE("Mime tests") {
   }
 
   TEST_CASE("Multiple attachment test") {
+    const std::string &text_filename = "/path/test.txt";
+    const std::string &bin_filename = "/path/attachment.bin";
+
     smtp::Mime m("test_user_agent");
-    m.addAttachment(kTextPath);
-    m.addAttachment(kBinaryPath);
+    m.addAttachment(text_filename, kSmallData);
+    m.addAttachment(bin_filename, kBinaryData);
     m.build();
 
     std::stringstream ss;
     ss << m;
-
-    const std::string &text_filename = fs::path(kTextPath).filename().string();
-    const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
 
     const std::string &actual = ss.str();
     const std::string &expected = "User-Agent: test_user_agent\r\n"
@@ -175,50 +176,15 @@ TEST_SUITE("Mime tests") {
     REQUIRE(expected == actual);
   }
 
-  TEST_CASE("Remove attachment test") {
-    smtp::Mime m("test_user_agent");
-    m.addAttachment(kTextPath);
-    m.addAttachment(kBinaryPath);
-    m.removeAttachment(kTextPath);
-    m.build();
-
-    std::stringstream ss;
-    ss << m;
-
-    const std::string &bin_filename = fs::path(kBinaryPath).filename().string();
-
-    const std::string &actual = ss.str();
-    const std::string &expected = "User-Agent: test_user_agent\r\n"
-                                  "MIME-Version: 1.0\r\n"
-                                  "Content-Type: multipart/mixed;\r\n"
-                                  " boundary=\"" +
-                                  smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
-                                  "\r\nThis is a multi-part message in MIME format.\r\n" +
-                                  smtp::Mime::kBoundary +
-                                  "\r\n"
-                                  "Content-Type: application/octet-stream\r\n"
-                                  "Content-Transfer-Encoding: base64\r\n"
-                                  "Content-Disposition: attachment;\r\n"
-                                  " filename=" +
-                                  bin_filename +
-                                  "\r\n"
-                                  "\r\n"
-                                  "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
-                                  "\r\n" +
-                                  smtp::Mime::kBoundary + "\r\n";
-
-    REQUIRE(expected == actual);
-  }
-
   TEST_CASE("Very large attachment test") {
+    const std::string &bin_filename = "/path/large.bin";
+
     smtp::Mime m("test_user_agent");
-    m.addAttachment(kLargeBinaryPath);
+    m.addAttachment(bin_filename, kLargeBinaryData);
     m.build();
 
     std::stringstream ss;
     ss << m;
-
-    const std::string &bin_filename = fs::path(kLargeBinaryPath).filename().string();
 
     const std::string &actual = ss.str();
     const std::string &expected =
