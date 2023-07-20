@@ -57,7 +57,8 @@ TEST_SUITE("Email tests") {
                   "its time for a pay rise.");
 
     smtp::Attachment attachment;
-    attachment.setContents("MimeMockAttachment");
+    const std::string &contents = "MimeMockAttachment";
+    attachment.setContents(std::vector<uint8_t>(contents.begin(), contents.end()));
     email.addAttachment(attachment);
 
     std::stringstream ss;
@@ -99,11 +100,13 @@ TEST_SUITE("Email tests") {
                   "its time for a pay rise.");
 
     smtp::Attachment attachment_one;
-    attachment_one.setContents("MimeMockAttachment");
+    const std::string &contents_one = "MimeMockAttachment";
+    attachment_one.setContents(std::vector<uint8_t>(contents_one.begin(), contents_one.end()));
     email.addAttachment(attachment_one);
 
     smtp::Attachment attachment_two;
-    attachment_two.setContents("MimeMockAttachment2");
+    const std::string &contents_two = "MimeMockAttachment2";
+    attachment_two.setContents(std::vector<uint8_t>(contents_two.begin(), contents_two.end()));
     email.addAttachment(attachment_two);
 
     email.removeAttachment(attachment_one);
@@ -147,7 +150,8 @@ TEST_SUITE("Email tests") {
                   "its time for a pay rise.");
 
     smtp::Attachment attachment_one;
-    attachment_one.setContents("MimeMockAttachment");
+    const std::string &contents_one = "MimeMockAttachment";
+    attachment_one.setContents(std::vector<uint8_t>(contents_one.begin(), contents_one.end()));
     email.addAttachment(attachment_one);
 
     email.clear();

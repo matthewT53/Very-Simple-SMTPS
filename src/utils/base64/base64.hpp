@@ -10,6 +10,7 @@ using byte = uint8_t;
 
 class Base64 {
 public:
+  static std::string Base64Encode(const std::string &data);
   static std::string Base64Encode(const std::vector<uint8_t> &data);
   static std::vector<uint8_t> Base64Decode(const std::string &data);
 
