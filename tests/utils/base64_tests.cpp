@@ -55,7 +55,7 @@ TEST_SUITE("Basic b64 encoding") {
   TEST_CASE("Basic encoding with string argument") {
     const std::string &s = "encode me please";
     const std::string &encoded = Base64::Base64Encode(s);
-    REQUIRE(encoded == "ZW5jb2RlIG1lIHBsZWFzZQo=");
+    REQUIRE(encoded == "ZW5jb2RlIG1lIHBsZWFzZQ==");
   }
 }
 

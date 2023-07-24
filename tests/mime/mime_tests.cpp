@@ -33,8 +33,13 @@ TEST_SUITE("Mime tests") {
     ss << m;
 
     const std::string &actual = ss.str();
-    const std::string &expected = "";
-
+    const std::string &expected = "User-Agent: test_user_agent\r\n"
+                                  "MIME-Version: 1.0\r\n"
+                                  "Content-Type: multipart/mixed;\r\n"
+                                  " boundary=\"" +
+                                  smtp::Mime::kBoundaryDeclare + "\"" + "\r\n" +
+                                  "\r\nThis is a multi-part message in MIME format.\r\n" +
+                                  smtp::Mime::kBoundary + "\r\n";
     REQUIRE(expected == actual);
   }
 
@@ -42,7 +47,6 @@ TEST_SUITE("Mime tests") {
     const std::string &message = "This is a test message placed inside the body.";
     smtp::Mime m("test_user_agent");
     m.addMessage(message);
-    m.build();
 
     std::stringstream ss;
     ss << m;
@@ -68,8 +72,7 @@ TEST_SUITE("Mime tests") {
     const std::string &file_path = "/path/test.txt";
 
     smtp::Mime m("test_user_agent");
-    m.addAttachment(file_path, Base64::Base64Encode(kSmallData));
-    m.build();
+    m.addAttachment(file_path, kSmallData);
 
     std::stringstream ss;
     ss << m;
@@ -86,8 +89,7 @@ TEST_SUITE("Mime tests") {
                                   "Content-Type: application/octet-stream\r\n"
                                   "Content-Transfer-Encoding: base64\r\n"
                                   "Content-Disposition: attachment;\r\n"
-                                  " filename=" +
-                                  file_path +
+                                  " filename=test.txt" +
                                   "\r\n"
                                   "\r\n"
                                   "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu"
@@ -102,7 +104,6 @@ TEST_SUITE("Mime tests") {
 
     smtp::Mime m("test_user_agent");
     m.addAttachment(bin_filename, kBinaryData);
-    m.build();
 
     std::stringstream ss;
     ss << m;
@@ -119,8 +120,7 @@ TEST_SUITE("Mime tests") {
                                   "Content-Type: application/octet-stream\r\n"
                                   "Content-Transfer-Encoding: base64\r\n"
                                   "Content-Disposition: attachment;\r\n"
-                                  " filename=" +
-                                  bin_filename +
+                                  " filename=test_small.bin" +
                                   "\r\n"
                                   "\r\n"
                                   "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
@@ -137,7 +137,6 @@ TEST_SUITE("Mime tests") {
     smtp::Mime m("test_user_agent");
     m.addAttachment(text_filename, kSmallData);
     m.addAttachment(bin_filename, kBinaryData);
-    m.build();
 
     std::stringstream ss;
     ss << m;
@@ -154,8 +153,7 @@ TEST_SUITE("Mime tests") {
                                   "Content-Type: application/octet-stream\r\n"
                                   "Content-Transfer-Encoding: base64\r\n"
                                   "Content-Disposition: attachment;\r\n"
-                                  " filename=" +
-                                  text_filename +
+                                  " filename=test.txt" +
                                   "\r\n"
                                   "\r\n"
                                   "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu\r\n"
@@ -165,8 +163,7 @@ TEST_SUITE("Mime tests") {
                                   "Content-Type: application/octet-stream\r\n"
                                   "Content-Transfer-Encoding: base64\r\n"
                                   "Content-Disposition: attachment;\r\n"
-                                  " filename=" +
-                                  bin_filename +
+                                  " filename=attachment.bin" +
                                   "\r\n"
                                   "\r\n"
                                   "kBKHhUNlEBJlkDQjJWVBQkP5\r\n"
@@ -181,7 +178,6 @@ TEST_SUITE("Mime tests") {
 
     smtp::Mime m("test_user_agent");
     m.addAttachment(bin_filename, kLargeBinaryData);
-    m.build();
 
     std::stringstream ss;
     ss << m;
@@ -198,8 +194,7 @@ TEST_SUITE("Mime tests") {
         "Content-Type: application/octet-stream\r\n"
         "Content-Transfer-Encoding: base64\r\n"
         "Content-Disposition: attachment;\r\n"
-        " filename=" +
-        bin_filename +
+        " filename=large.bin" +
         "\r\n"
         "\r\n"
         "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8gISIjJCUmJygpKissLS4vMDEyMzQ1"
