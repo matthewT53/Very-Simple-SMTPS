@@ -21,13 +21,11 @@ public:
   explicit Attachment(const std::string &file_path);
 
   std::string getFilePath() const { return m_file_path; }
-  void setFiilePath(std::string_view file_path) { m_file_path = file_path; }
+  void setFilePath(std::string_view file_path) { m_file_path = file_path; }
 
   // Returns the base64 encoded contents
   std::string getContentsAsB64() const;
   void setContents(const std::vector<uint8_t> &contents);
-
-  bool operator==(const Attachment &other) const { return m_file_path == other.m_file_path; }
 
 private:
   std::vector<uint8_t> m_contents;

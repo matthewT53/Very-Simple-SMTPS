@@ -21,14 +21,13 @@ struct UploadStatus {
 };
 
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
+static std::string getCurrentDateTime();
 
 Email::Email(const EmailParams &params)
-    : m_smtp_user{params.user}, m_smtp_password{params.password}, m_smtp_host{params.hostname} {}
+    : m_smtp_user{params.user}, m_smtp_password{params.password},
+      m_smtp_host{params.hostname}, m_date{getCurrentDateTime()} {}
 
 void Email::addAttachment(const Attachment &attachment) { m_attachments.push_back(attachment); }
-void Email::removeAttachment(const Attachment &attachment) {
-  (void)std::remove(m_attachments.begin(), m_attachments.end(), attachment);
-}
 
 void Email::removeAttachment(std::string_view file_path) {
   const auto &checkFilePath = [&file_path](const Attachment &attachment) {
@@ -40,21 +39,25 @@ void Email::removeAttachment(std::string_view file_path) {
   }
 }
 
-std::vector<std::string> Email::build() const {
-  // Mime document with possible attachments
-  std::vector<std::string> result;
-
+static std::string getCurrentDateTime() {
   auto cur_time = std::chrono::system_clock::now();
   const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
 
   std::stringstream ss;
   ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
 
+  return ss.str();
+}
+
+std::vector<std::string> Email::build() const {
+  // Mime document with possible attachments
+  std::vector<std::string> result;
+
   result.push_back("To: " + m_to + "\r\n");
   result.push_back("From: " + m_from + "\r\n");
   result.push_back("Cc: " + m_cc + "\r\n");
   result.push_back("Subject: " + m_subject + "\r\n");
-  result.push_back(ss.str() + "\r\n");
+  result.push_back(m_date + "\r\n");
 
   smtp::Mime m_mime;
   m_mime.addMessage(m_body);
@@ -195,6 +198,7 @@ void Email::clear() {
   m_from.clear();
   m_cc.clear();
   m_subject.clear();
+  m_date = getCurrentDateTime();
   m_body.clear();
 
   m_attachments.clear();
