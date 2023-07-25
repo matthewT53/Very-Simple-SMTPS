@@ -65,7 +65,7 @@ std::vector<std::string> Email::build() const {
   }
 
   // build the whole email
-  std::vector<std::string> mime_lines = m_mime.build();
+  const std::vector<std::string> &mime_lines = m_mime.build();
   for (const auto &line : mime_lines) {
     result.push_back(line);
   }
