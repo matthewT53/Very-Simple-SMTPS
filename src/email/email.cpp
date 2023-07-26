@@ -50,7 +50,6 @@ static std::string getCurrentDateTime() {
 }
 
 std::vector<std::string> Email::build() const {
-  // Mime document with possible attachments
   std::vector<std::string> result;
 
   result.push_back("To: " + m_to + "\r\n");
@@ -62,12 +61,10 @@ std::vector<std::string> Email::build() const {
   smtp::Mime m_mime;
   m_mime.addMessage(m_body);
 
-  // build the attachments
   for (const auto &attachment : m_attachments) {
     m_mime.addAttachment(attachment.getFilePath(), attachment.getContentsAsB64());
   }
 
-  // build the whole email
   const std::vector<std::string> &mime_lines = m_mime.build();
   for (const auto &line : mime_lines) {
     result.push_back(line);

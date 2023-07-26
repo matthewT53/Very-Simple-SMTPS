@@ -2,7 +2,6 @@
 #include "utils/base64/base64.hpp"
 
 #include <algorithm>
-#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>

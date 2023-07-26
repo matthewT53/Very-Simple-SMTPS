@@ -1,8 +1,3 @@
-/*
-  Code to send an email with attachments using LIBCURL
-  Supports SMTPS only.
-*/
-
 #pragma once
 
 #include <string>

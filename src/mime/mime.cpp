@@ -14,7 +14,6 @@ const std::string Mime::kBoundary = "--" + kBoundaryDeclare;
 const std::string Mime::kLastBoundary = kBoundary + "--";
 const std::string Mime::kCRLF = "\r\n";
 
-// The base64 contents of an attachment are split into chunks of 512 bytes.
 const int kTransferRate = 512;
 
 Mime::Mime(const std::string &user_agent) : m_user_agent{user_agent} { buildHeader(); }
