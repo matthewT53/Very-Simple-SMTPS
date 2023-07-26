@@ -23,6 +23,11 @@ static std::vector<smtp::byte> base64DecodeBlock(const std::string &table,
 
 static smtp::byte getByteValue(const std::string &table, char value);
 
+std::string smtp::Base64::Base64Encode(const std::string &data) {
+  const std::vector<smtp::byte> data_bytes(data.begin(), data.end());
+  return Base64Encode(data_bytes);
+}
+
 std::string smtp::Base64::Base64Encode(const std::vector<smtp::byte> &data) {
   return base64Encode(b64Table, data);
 }

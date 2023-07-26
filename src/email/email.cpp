@@ -9,27 +9,77 @@
 #include <string>
 
 #include "email/email.hpp"
+#include "mime/mime.hpp"
 
 #include "curl/curl.h"
 
 namespace smtp {
 
-static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
-
-Email::Email(const std::string &user, const std::string &password, const std::string &hostname)
-    : m_smtp_user{user}, m_smtp_password{password}, m_smtp_host{hostname} {
-  m_mime = std::make_unique<smtp::Mime>();
-}
-
-typedef struct _upload_status {
+struct UploadStatus {
   uint64_t lines_read;
   std::vector<std::string> email_contents;
-} UploadStatus;
+};
+
+static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp);
+static std::string getCurrentDateTime();
+
+Email::Email(const EmailParams &params)
+    : m_smtp_user{params.user}, m_smtp_password{params.password},
+      m_smtp_host{params.hostname}, m_date{getCurrentDateTime()} {}
+
+void Email::addAttachment(const Attachment &attachment) { m_attachments.push_back(attachment); }
+
+void Email::removeAttachment(std::string_view file_path) {
+  const auto &checkFilePath = [&file_path](const Attachment &attachment) {
+    return attachment.getFilePath() == file_path;
+  };
+  if (const auto &it = std::find_if(m_attachments.begin(), m_attachments.end(), checkFilePath);
+      it != m_attachments.end()) {
+    m_attachments.erase(it);
+  }
+}
+
+static std::string getCurrentDateTime() {
+  auto cur_time = std::chrono::system_clock::now();
+  const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
+
+  std::stringstream ss;
+  ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
+
+  return ss.str();
+}
+
+std::vector<std::string> Email::build() const {
+  std::vector<std::string> result;
+
+  result.push_back("To: " + m_to + "\r\n");
+  result.push_back("From: " + m_from + "\r\n");
+  result.push_back("Cc: " + m_cc + "\r\n");
+  result.push_back("Subject: " + m_subject + "\r\n");
+  result.push_back(m_date + "\r\n");
+
+  smtp::Mime m_mime;
+  m_mime.addMessage(m_body);
+
+  for (const auto &attachment : m_attachments) {
+    m_mime.addAttachment(attachment.getFilePath(), attachment.getContentsAsB64());
+  }
+
+  const std::vector<std::string> &mime_lines = m_mime.build();
+  for (const auto &line : mime_lines) {
+    result.push_back(line);
+  }
+
+  result.push_back(smtp::Mime::kLastBoundary);
+  result.emplace_back("\r\n.\r\n");
+
+  return result;
+}
 
 void Email::send() const {
   CURL *curl = nullptr;
   CURLcode res = CURLE_OK;
-  struct curl_slist *recipients = NULL;
+  struct curl_slist *recipients = nullptr;
   UploadStatus upload_ctx;
 
   upload_ctx.email_contents = build();
@@ -100,8 +150,9 @@ void Email::send() const {
     res = curl_easy_perform(curl);
 
     /* Check for errors */
-    if (res != CURLE_OK)
+    if (res != CURLE_OK) {
       fprintf(stderr, "curl_easy_perform() failed: %s\n", curl_easy_strerror(res));
+    }
 
     /* Free the list of recipients */
     curl_slist_free_all(recipients);
@@ -111,35 +162,11 @@ void Email::send() const {
   }
 }
 
-std::vector<std::string> Email::build() const {
-  std::vector<std::string> result;
-
-  auto cur_time = std::chrono::system_clock::now();
-  const std::time_t &time_t_obj = std::chrono::system_clock::to_time_t(cur_time);
-
-  std::stringstream ss;
-  ss << std::put_time(std::localtime(&time_t_obj), "%d/%m/%Y %I:%M:%S +1100");
-
-  result.push_back("To: " + m_to + "\r\n");
-  result.push_back("From: " + m_from + "\r\n");
-  result.push_back("Cc: " + m_cc + "\r\n");
-  result.push_back("Subject: " + m_subject + "\r\n");
-  result.push_back(ss.str() + "\r\n");
-
-  std::vector<std::string> mime_lines = m_mime->build();
-  for (const auto &line : mime_lines)
-    result.push_back(line);
-
-  result.push_back(smtp::Mime::kLastBoundary);
-  result.push_back("\r\n.\r\n");
-
-  return result;
-}
-
 static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp) {
-  UploadStatus *upload_ctx = (UploadStatus *)userp;
-  const char *data;
+  auto *upload_ctx = static_cast<UploadStatus *>(userp);
+  const char *data = nullptr;
 
+  // No more data to send
   if ((size == 0) || (nmemb == 0) || ((size * nmemb) < 1)) {
     return 0;
   }
@@ -157,6 +184,21 @@ static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp)
   }
 
   return 0;
+}
+
+void Email::clear() {
+  m_smtp_user.clear();
+  m_smtp_password.clear();
+  m_smtp_host.clear();
+
+  m_to.clear();
+  m_from.clear();
+  m_cc.clear();
+  m_subject.clear();
+  m_date = getCurrentDateTime();
+  m_body.clear();
+
+  m_attachments.clear();
 }
 
 } // namespace smtp

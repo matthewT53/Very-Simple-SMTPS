@@ -48,8 +48,14 @@ TEST_SUITE("Basic b64 encoding") {
   }
 
   TEST_CASE("Encoding an empty string") {
-    const std::string encoded = Base64::Base64Encode({});
+    const std::string encoded = Base64::Base64Encode("");
     CHECK(encoded.empty());
+  }
+
+  TEST_CASE("Basic encoding with string argument") {
+    const std::string &s = "encode me please";
+    const std::string &encoded = Base64::Base64Encode(s);
+    REQUIRE(encoded == "ZW5jb2RlIG1lIHBsZWFzZQ==");
   }
 }
 

@@ -4,48 +4,39 @@
 #include <string>
 #include <vector>
 
-#include "mime/mime_abstract.hpp"
-
 namespace smtp {
 
-class Mime : public smtp::IMime {
+class Mime {
 public:
-  Mime(const std::string &p_user_agent = "test bot");
+  explicit Mime(const std::string &user_agent = "Very-Simple-SMTPS");
 
-  // Adds a file specified by t_filename as an attachment to this mime message
-  void addAttachment(const std::string &p_filename) override;
+  void addAttachment(const std::string &attachment_path, const std::string &contents_b64);
+  void addMessage(const std::string &message);
 
-  // Removes the attachment specified by filename from this Mime document
-  void removeAttachment(const std::string &p_filename) override;
-
-  // Adds a body to the email address
-  void addMessage(const std::string &p_message) override;
-
-  // Removes the body message specified by the message contents from this Mime
-  // document
-  void removeMessage(const std::string &p_message) override;
-
-  // Constructs the mime message with the version, user agent as well as any
-  // attachments
-  std::vector<std::string> build() const override;
+  std::vector<std::string> build() const { return m_document; }
 
   static const std::string kBoundaryDeclare;
   static const std::string kBoundary;
   static const std::string kLastBoundary;
   static const std::string kCRLF;
 
-protected:
-  std::ostream &output(std::ostream &p_out) const override;
-
 private:
-  std::vector<std::string> m_files;
-  std::vector<std::string> m_messages;
-
+  std::vector<std::string> m_document;
   std::string m_user_agent;
 
-  void buildHeader(std::vector<std::string> &p_contents) const;
-  void buildMessages(std::vector<std::string> &p_contents) const;
-  void buildAttachments(std::vector<std::string> &p_contents) const;
+  void buildHeader();
+
+  std::ostream &output(std::ostream &out) const {
+    std::string contents;
+    for (const std::string &line : build()) {
+      contents += line;
+    }
+    return out << contents;
+  }
+
+  friend std::ostream &operator<<(std::ostream &p_out, const Mime &p_mime) {
+    return p_mime.output(p_out);
+  }
 };
 
 } // namespace smtp
