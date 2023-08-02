@@ -11,3 +11,6 @@ build/
 
 # conan generated files
 .conan
+
+# ignore test attachments
+examples/*.jpg

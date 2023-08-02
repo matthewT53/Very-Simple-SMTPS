@@ -1,5 +1,5 @@
 example_srcs = [
-    'example1.cpp'
+    'send_attachments.cpp'
 ]
 
 examples_exe = executable(
@@ -7,5 +7,6 @@ examples_exe = executable(
     example_srcs,
     include_directories : incdir,
     link_with : smtp_lib,
-    cpp_args : ['-Wall', '-Werror'],
+    link_args : base_linker_args,
+    cpp_args : base_cpp_args,
 )
