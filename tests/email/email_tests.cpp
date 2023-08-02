@@ -6,8 +6,14 @@
 
 #include "doctest/doctest.h"
 
+#include "date_time/date_time_now.hpp"
 #include "email/email.hpp"
 #include "mime/mime.hpp"
+
+class DateTimeStatic : public smtp::DateTime {
+public:
+  std::string getTimestamp() const override { return "25/07/2023 07:21:05 +1100"; }
+};
 
 TEST_SUITE("Email tests") {
   TEST_CASE("Basic email test") {
@@ -18,7 +24,7 @@ TEST_SUITE("Email tests") {
     email.setFrom("tully@gmail.com");
     email.setSubject("PWC pay rise");
     email.setCc("All the bosses at PWC");
-    email.setDate("25/07/2023 07:21:05 +1100");
+    email.setDate(DateTimeStatic());
     email.setBody("Hey mate, I have been working here for 5 years now, I think "
                   "its time for a pay rise.");
 
@@ -56,7 +62,7 @@ TEST_SUITE("Email tests") {
     email.setTo("bigboss@gmail.com");
     email.setFrom("tully@gmail.com");
     email.setSubject("PWC pay rise");
-    email.setDate("25/07/2023 07:21:05 +1100");
+    email.setDate(DateTimeStatic());
     email.setCc("All the bosses at PWC");
     email.setBody("Hey mate, I have been working here for 5 years now, I think "
                   "its time for a pay rise.");
@@ -110,7 +116,7 @@ TEST_SUITE("Email tests") {
     email.setTo("bigboss@gmail.com");
     email.setFrom("tully@gmail.com");
     email.setSubject("PWC pay rise");
-    email.setDate("25/07/2023 07:21:05 +1100");
+    email.setDate(DateTimeStatic());
     email.setCc("All the bosses at PWC");
     email.setBody("Hey mate, I have been working here for 5 years now, I think "
                   "its time for a pay rise.");
@@ -173,7 +179,7 @@ TEST_SUITE("Email tests") {
     email.setFrom("tully@gmail.com");
     email.setSubject("PWC pay rise");
     email.setCc("All the bosses at PWC");
-    email.setDate("25/07/2023 07:21:05 +1100");
+    email.setDate(DateTimeStatic());
     email.setBody("Hey mate, I have been working here for 5 years now, I think "
                   "its time for a pay rise.");
 
@@ -183,7 +189,7 @@ TEST_SUITE("Email tests") {
     email.addAttachment(attachment_one);
 
     email.clear();
-    email.setDate("25/07/2023 07:21:05 +1100");
+    email.setDate(DateTimeStatic());
 
     const std::string &expected = "To: \r\n"
                                   "From: \r\n"
