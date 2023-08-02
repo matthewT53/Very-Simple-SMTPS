@@ -3,6 +3,7 @@
 */
 
 #include "attachment/attachment.hpp"
+#include "date_time/date_time_now.hpp"
 #include "email/email.hpp"
 
 using namespace smtp;
@@ -16,7 +17,7 @@ int main(void) {
   e.setFrom("test_from@gmail.com");
   e.setSubject("Testing sending attachments");
   e.setBody("Hey listen friend here are some attachments for you to play with!");
-  e.setDate("01/08/1003 01:05:24 +1100");
+  e.setDate(DateTimeNow());
 
   Attachment a{"mountain-beach.jpg"};
   Attachment a2{"mountain-beach2.jpg"};
