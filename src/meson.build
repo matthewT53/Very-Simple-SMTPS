@@ -8,6 +8,7 @@ smtp_srcs = [
     'mime/mime.cpp',
     'utils/base64/base64.cpp',
     'attachment/attachment.cpp',
+    'date_time/date_time_now.cpp',
 ]
 
 # incdir comes from the meson build in the ./ directory

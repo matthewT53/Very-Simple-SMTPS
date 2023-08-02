@@ -5,6 +5,7 @@
 #include <vector>
 
 #include "attachment/attachment.hpp"
+#include "date_time/date_time_now.hpp"
 #include "utils/secure_strings.hpp"
 
 namespace smtp {
@@ -24,11 +25,7 @@ public:
   void setCc(std::string_view cc) { m_cc = cc; }
   void setSubject(std::string_view subject) { m_subject = subject; }
   void setBody(std::string_view body) { m_body = body; }
-
-  // Optional: If the date is not set using this method then the current datetime will be used by
-  // default. If you choose to use this method then the format of the date is dd/mm/yyyy HH:MM:SS +z
-  // e.g 25/07/2023 07:21:05 +1100
-  void setDate(std::string_view date) { m_date = date; }
+  void setDate(const DateTime &dt) { m_date = dt.getTimestamp(); }
 
   void addAttachment(const Attachment &attachment);
   void removeAttachment(std::string_view file_path);
