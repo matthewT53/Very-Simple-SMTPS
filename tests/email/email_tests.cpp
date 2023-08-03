@@ -15,9 +15,10 @@ public:
   std::string getTimestamp() const override { return "25/07/2023 07:21:05 +1100"; }
 };
 
+const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
+
 TEST_SUITE("Email tests") {
   TEST_CASE("Basic email test") {
-    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
     smtp::EmailParams params{
         "user",                  // smtp username
         "password",              // smtp password
@@ -61,7 +62,6 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Add attachment test") {
-    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
     smtp::EmailParams params{
         "user",                  // smtp username
         "password",              // smtp password
@@ -119,7 +119,6 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Remove attachment test") {
-    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
     smtp::EmailParams params{
         "user",                  // smtp username
         "password",              // smtp password
@@ -185,7 +184,6 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Clear test") {
-    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
     smtp::EmailParams params{
         "user",                  // smtp username
         "password",              // smtp password
