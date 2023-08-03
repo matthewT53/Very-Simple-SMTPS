@@ -17,16 +17,21 @@ public:
 
 TEST_SUITE("Email tests") {
   TEST_CASE("Basic email test") {
-    smtp::EmailParams params{"user", "password", "hostname"};
-    smtp::Email email(params);
+    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
+    smtp::EmailParams params{
+        "user",                  // smtp username
+        "password",              // smtp password
+        "hostname",              // smtp server
+        "bigboss@gmail.com",     // to
+        "tully@gmail.com",       // from
+        "All the bosses at PWC", // cc
+        "PWC pay rise",          // subject
+        "Hey mate, I have been working here for 5 years now, I think "
+        "its time for a pay rise.", // body
+        dateTimeStatic.get()        // optional datetime
+    };
 
-    email.setTo("bigboss@gmail.com");
-    email.setFrom("tully@gmail.com");
-    email.setSubject("PWC pay rise");
-    email.setCc("All the bosses at PWC");
-    email.setDate(DateTimeStatic());
-    email.setBody("Hey mate, I have been working here for 5 years now, I think "
-                  "its time for a pay rise.");
+    smtp::Email email(params);
 
     const std::string &expected =
         "To: bigboss@gmail.com\r\n"
@@ -56,16 +61,20 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Add attachment test") {
-    smtp::EmailParams params{"user", "password", "hostname"};
+    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
+    smtp::EmailParams params{
+        "user",                  // smtp username
+        "password",              // smtp password
+        "hostname",              // smtp server
+        "bigboss@gmail.com",     // to
+        "tully@gmail.com",       // from
+        "All the bosses at PWC", // cc
+        "PWC pay rise",          // subject
+        "Hey mate, I have been working here for 5 years now, I think "
+        "its time for a pay rise.", // body
+        dateTimeStatic.get()        // optional datetime
+    };
     smtp::Email email(params);
-
-    email.setTo("bigboss@gmail.com");
-    email.setFrom("tully@gmail.com");
-    email.setSubject("PWC pay rise");
-    email.setDate(DateTimeStatic());
-    email.setCc("All the bosses at PWC");
-    email.setBody("Hey mate, I have been working here for 5 years now, I think "
-                  "its time for a pay rise.");
 
     smtp::Attachment attachment;
     const std::string &contents = "MimeMockAttachment";
@@ -110,16 +119,20 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Remove attachment test") {
-    smtp::EmailParams params{"user", "password", "hostname"};
+    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
+    smtp::EmailParams params{
+        "user",                  // smtp username
+        "password",              // smtp password
+        "hostname",              // smtp server
+        "bigboss@gmail.com",     // to
+        "tully@gmail.com",       // from
+        "All the bosses at PWC", // cc
+        "PWC pay rise",          // subject
+        "Hey mate, I have been working here for 5 years now, I think "
+        "its time for a pay rise.", // body
+        dateTimeStatic.get()        // optional datetime
+    };
     smtp::Email email(params);
-
-    email.setTo("bigboss@gmail.com");
-    email.setFrom("tully@gmail.com");
-    email.setSubject("PWC pay rise");
-    email.setDate(DateTimeStatic());
-    email.setCc("All the bosses at PWC");
-    email.setBody("Hey mate, I have been working here for 5 years now, I think "
-                  "its time for a pay rise.");
 
     smtp::Attachment attachment_one;
     const std::string &contents_one = "MimeMockAttachment";
@@ -172,24 +185,26 @@ TEST_SUITE("Email tests") {
   }
 
   TEST_CASE("Clear test") {
-    smtp::EmailParams params{"user", "password", "hostname"};
+    const auto dateTimeStatic = std::make_unique<DateTimeStatic>();
+    smtp::EmailParams params{
+        "user",                  // smtp username
+        "password",              // smtp password
+        "hostname",              // smtp server
+        "bigboss@gmail.com",     // to
+        "tully@gmail.com",       // from
+        "All the bosses at PWC", // cc
+        "PWC pay rise",          // subject
+        "Hey mate, I have been working here for 5 years now, I think "
+        "its time for a pay rise.", // body
+        dateTimeStatic.get()        // optional datetime
+    };
     smtp::Email email(params);
-
-    email.setTo("bigboss@gmail.com");
-    email.setFrom("tully@gmail.com");
-    email.setSubject("PWC pay rise");
-    email.setCc("All the bosses at PWC");
-    email.setDate(DateTimeStatic());
-    email.setBody("Hey mate, I have been working here for 5 years now, I think "
-                  "its time for a pay rise.");
 
     smtp::Attachment attachment_one;
     const std::string &contents_one = "MimeMockAttachment";
     attachment_one.setContents(std::vector<uint8_t>(contents_one.begin(), contents_one.end()));
     email.addAttachment(attachment_one);
-
     email.clear();
-    email.setDate(DateTimeStatic());
 
     const std::string &expected = "To: \r\n"
                                   "From: \r\n"

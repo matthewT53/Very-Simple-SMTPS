@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <string>
 #include <string_view>
 #include <vector>
@@ -14,18 +15,18 @@ struct EmailParams {
   std::string_view user;
   std::string_view password;
   std::string_view hostname;
+
+  std::string_view to;
+  std::string_view from;
+  std::string_view cc;
+  std::string_view subject;
+  std::string_view body;
+  const DateTime *datetime = nullptr;
 };
 
 class Email {
 public:
   explicit Email(const EmailParams &params);
-
-  void setTo(std::string_view to) { m_to = to; }
-  void setFrom(std::string_view from) { m_from = from; }
-  void setCc(std::string_view cc) { m_cc = cc; }
-  void setSubject(std::string_view subject) { m_subject = subject; }
-  void setBody(std::string_view body) { m_body = body; }
-  void setDate(const DateTime &dt) { m_date = dt.getTimestamp(); }
 
   void addAttachment(const Attachment &attachment);
   void removeAttachment(std::string_view file_path);
@@ -44,12 +45,13 @@ private:
   std::string m_from;
   std::string m_cc;
   std::string m_subject;
-  std::string m_date;
   std::string m_body;
 
+  const DateTime *m_date = nullptr;
   std::vector<Attachment> m_attachments;
 
   std::vector<std::string> build() const;
+  std::string getDatetime() const;
 
   friend std::ostream &operator<<(std::ostream &out, const Email &email) {
     const std::vector<std::string> &email_contents = email.build();

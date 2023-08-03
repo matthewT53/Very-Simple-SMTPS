@@ -5,6 +5,7 @@
 #include <ctime>
 #include <iomanip>
 #include <iostream>
+#include <memory>
 #include <sstream>
 #include <string>
 
@@ -24,7 +25,8 @@ static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp)
 
 Email::Email(const EmailParams &params)
     : m_smtp_user{params.user}, m_smtp_password{params.password},
-      m_smtp_host{params.hostname}, m_date{DateTimeNow().getTimestamp()} {}
+      m_smtp_host{params.hostname}, m_to{params.to}, m_from{params.from}, m_cc{params.cc},
+      m_subject{params.subject}, m_body{params.body}, m_date{params.datetime} {}
 
 void Email::addAttachment(const Attachment &attachment) { m_attachments.push_back(attachment); }
 
@@ -46,7 +48,7 @@ std::vector<std::string> Email::build() const {
   result.push_back("From: " + m_from + "\r\n");
   result.push_back("Cc: " + m_cc + "\r\n");
   result.push_back("Subject: " + m_subject + "\r\n");
-  result.push_back(m_date + "\r\n");
+  result.push_back(this->getDatetime() + "\r\n");
 
   smtp::Mime m_mime;
   m_mime.addMessage(m_body);
@@ -72,7 +74,7 @@ void Email::send() const {
   struct curl_slist *recipients = nullptr;
   UploadStatus upload_ctx;
 
-  upload_ctx.email_contents = build();
+  upload_ctx.email_contents = this->build();
   upload_ctx.lines_read = 0;
 
   curl = curl_easy_init();
@@ -176,6 +178,11 @@ static size_t payloadCallback(void *ptr, size_t size, size_t nmemb, void *userp)
   return 0;
 }
 
+std::string Email::getDatetime() const {
+  const auto datetimenow = std::make_unique<DateTimeNow>();
+  return m_date ? m_date->getTimestamp() : datetimenow->getTimestamp();
+}
+
 void Email::clear() {
   m_smtp_user.clear();
   m_smtp_password.clear();
@@ -185,7 +192,6 @@ void Email::clear() {
   m_from.clear();
   m_cc.clear();
   m_subject.clear();
-  m_date = DateTimeNow().getTimestamp();
   m_body.clear();
 
   m_attachments.clear();
