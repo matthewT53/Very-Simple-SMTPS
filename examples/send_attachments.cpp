@@ -18,7 +18,7 @@ int main(void) {
       "",                                                                  // cc
       "Testing sending attachments",                                       // subject
       "Hey listen friend here are some attachments for you to play with!", // body
-  };                                                                       // optional date
+  };
   Email e{params};
 
   Attachment a{"mountain-beach.jpg"};
