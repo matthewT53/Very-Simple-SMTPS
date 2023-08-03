@@ -1,12 +1,5 @@
 #include <algorithm>
-#include <chrono>
 #include <cstdint>
-#include <cstring>
-#include <ctime>
-#include <iomanip>
-#include <iostream>
-#include <memory>
-#include <sstream>
 #include <string>
 
 #include "email/email.hpp"
