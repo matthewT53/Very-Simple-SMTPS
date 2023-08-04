@@ -9,15 +9,17 @@
 using namespace smtp;
 
 int main(void) {
-  EmailParams params{"test_username", "test_password",
-                     "smtps://email-smtp.ap-southeast-2.amazonaws.com:465"};
+  EmailParams params{
+      "test_username",                                                     // smtp username
+      "test_password",                                                     // smtp password
+      "smtps://email-smtp.ap-southeast-2.amazonaws.com:465",               // smtp server
+      "test_to@gmail.com",                                                 // to
+      "test_from@gmail.com",                                               // from
+      "",                                                                  // cc
+      "Testing sending attachments",                                       // subject
+      "Hey listen friend here are some attachments for you to play with!", // body
+  };
   Email e{params};
-
-  e.setTo("test_to@gmail.com");
-  e.setFrom("test_from@gmail.com");
-  e.setSubject("Testing sending attachments");
-  e.setBody("Hey listen friend here are some attachments for you to play with!");
-  e.setDate(DateTimeNow());
 
   Attachment a{"mountain-beach.jpg"};
   Attachment a2{"mountain-beach2.jpg"};
