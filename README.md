@@ -32,7 +32,7 @@ This library currently only supports the `LOGIN/PLAIN` SMTP authentication metho
 
 ## How to use:
 
-This library can be installed with the `conan package manager` or by downloading a release and copying this library's code into your project.
+This library can be integrated into your project by using the `conan package manager` or by downloading a release and copying this library's code into your project.
 
 ### Conancenter:
 
