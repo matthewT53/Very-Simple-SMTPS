@@ -11,15 +11,15 @@
     - [Conancenter](#conancenter)
     - [Download release](#download-a-release)
     - [Example usage](#example-usage)
-- [SMTP server providers](#smtp-server-providers)
-    - [Amazon](#amazon-ses)
-    - [Google](#google)
 - [How to build](#how-to-build)
     - [Scripts](#scripts)
     - [Building](#building)
     - [Testing](#testing)
     - [Example](#example)
     - [Clean up](#clean-up)
+- [SMTPS server providers](#smtps-server-providers)
+    - [Amazon](#amazon-ses)
+    - [Google](#google)
 
 ## About:
 
@@ -47,11 +47,11 @@ using namespace smtp;
 
 int main(void) {
   EmailParams params{
-      "test_username",                                                     // smtp username
-      "test_password",                                                     // smtp password
-      "smtps://email-smtp.ap-southeast-2.amazonaws.com:465",               // smtp server
-      "test_to@gmail.com",                                                 // to
-      "test_from@gmail.com",                                               // from
+      "gmail_account@gmail.com",                                                     // smtp username
+      "google_app_password",                                                     // smtp password
+      "smtps://smtp.gmail.com:465",               // smtp server
+      "target@gmail.com",                                                 // to
+      "gmail_account@gmail.com",                                               // from
       "",                                                                  // cc
       "Testing sending attachments",                                       // subject
       "Hey listen friend here are some attachments for you to play with!", // body
@@ -69,12 +69,10 @@ int main(void) {
 }
 ```
 
-## SMTP server providers:
-
 ## How to build:
 ### Scripts:
 
-The scripts below need to be run from the project root i.e `./Very-Simple-SMTPS`.
+The scripts below need to be run from the project root i.e `./Very-Simple-SMTPS`
 
 ```bash
 $ ./scripts/venv.sh     # Creates or starts the python virtual environment required to build and run tests
@@ -104,7 +102,7 @@ $ ./scripts/test.sh
 ```
 
 ### Example:
-- There is an example of how to send an email with attachments under `./examples/send_attachments.cpp`.
+- There is an example of how to send an email with attachments under `./examples/send_attachments.cpp`
 - Fill in the credentials and you should be good to go!
 - To run the example:
 ```bash
@@ -116,3 +114,17 @@ $ ./.conan/examples/examples
 ```bash
 $ ./scripts/cleanup.sh
 ```
+
+## SMTPS server providers:
+### Amazon SES:
+- This library has been tested against Amazon SES's SMTPS servers.
+- Sender and receiver email addresses do need to be registered and verified in the AWS SES product.
+- One of the many SMTPS servers: `smtps://email-smtp.ap-southeast-2.amazonaws.com:465`
+
+### Google:
+- Google doesn't seem to allow access to `less secure apps` anymore.
+- To use Google's SMTPS server, two step verification needs to be enabled on the Gmail account.
+- Once this has been enabled, we can create an `App password`.
+- This password will be used as the SMTP password.
+- The SMTP username is the Gmail address.
+- SMTPS server: `smtps://smtp.gmail.com:465`
