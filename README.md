@@ -2,55 +2,117 @@
 
 [![Build Status](http://ec2-52-63-33-178.ap-southeast-2.compute.amazonaws.com:31580/api/badges/matthewT53/Very-Simple-SMTPS/status.svg?ref=refs/heads/main)](http://ec2-52-63-33-178.ap-southeast-2.compute.amazonaws.com:31580/matthewT53/Very-Simple-SMTPS)
 
-A small library written in C++ that uses libcurl to be able to send emails with binary attachments.
+![smtps-image](docs/readme_image.jpg)
 
-## Using in your project:
-* Simply copy everything headers and src files into your own project.
-* Also remove the meson.build files that are in each folder.
-* **Note:** This library relies on the curl library, so you would need to install libcurl:
-```sh
-    sudo apt-get install libcurl4 libcurl4-openssl-dev # or libcurl4-gnutls-dev
+## Contents:
+- [About](#about)
+- [Features](#features)
+- [How to use](#how-to-use)
+    - [Conancenter](#conancenter)
+    - [Download release](#download-a-release)
+    - [Example usage](#example-usage)
+- [SMTP server providers](#smtp-server-providers)
+    - [Amazon](#amazon-ses)
+    - [Google](#google)
+- [How to build](#how-to-build)
+    - [Scripts](#scripts)
+    - [Building](#building)
+    - [Testing](#testing)
+    - [Example](#example)
+    - [Clean up](#clean-up)
+
+## About:
+
+A small library written in modern C++ that can be used to send emails with binary attachments.
+
+## Features:
+### SMTP authentication:
+
+This library currently only supports the `LOGIN/PLAIN` SMTP authentication method which means you will need to supply your `username` and `password` for your email account when you're sending emails with this library.
+
+## How to use:
+
+This library can be installed with the `conan package manager` or by downloading a release and copying this library's code into your project.
+
+### Conancenter:
+
+### Download a release:
+
+### Example usage:
+```c++
+#include "attachment/attachment.hpp"
+#include "email/email.hpp"
+
+using namespace smtp;
+
+int main(void) {
+  EmailParams params{
+      "test_username",                                                     // smtp username
+      "test_password",                                                     // smtp password
+      "smtps://email-smtp.ap-southeast-2.amazonaws.com:465",               // smtp server
+      "test_to@gmail.com",                                                 // to
+      "test_from@gmail.com",                                               // from
+      "",                                                                  // cc
+      "Testing sending attachments",                                       // subject
+      "Hey listen friend here are some attachments for you to play with!", // body
+  };
+  Email e{params};
+
+  Attachment a{"mountain-beach.jpg"};
+  Attachment a2{"mountain-beach2.jpg"};
+  e.addAttachment(a);
+  e.addAttachment(a2);
+
+  e.send();
+
+  return 0;
+}
 ```
-* If you are on Windows, then you need to download the library file (*.a) and link to it.
-* **NOTE:** When sending attachments, the fullpath to the file must be provided!
 
-### Working with email providers:
-* If you are using this library with gmail smtp then **you will need to enable access to less secure apps in your google account settings.**
-* These links should help:
-1. https://support.google.com/accounts/answer/6010255?hl=en
-2. https://docs.bitnami.com/aws/faq/troubleshooting/troubleshoot-smtp-gmail/
+## SMTP server providers:
 
-## Examples:
-* To run the examples, a few more dependencies will be required.
-* To install these dependencies, please run the setup.sh script:
-```sh
-    # Installs python3 tools, ninja, cpputest as well as libcurl.
-    $ sudo ./scripts/setup.sh
-```
-* **Note:** The recommendation is to execute this script while inside a python virtual environment.
+## How to build:
+### Scripts:
 
-## Building:
-* To **build** the tests and the examples, **you will need gcc-9 or newer** to compile the latest C++17 features.
-* To change the compiler, set the CC and CXX environment variables in scripts/build.sh:
+The scripts below need to be run from the project root i.e `./Very-Simple-SMTPS`.
+
 ```bash
-#!/bin/bash
-
-# Set the GCC compiler to version 8+ for C++17 features to work.
-export CC=gcc-9     # Change it here
-export CXX=g++-9    # And here
-
-meson build && cd build
-ninja
-```
-* **Note:** The build script must be run from the project's root directory.
-```sh
-    $ ./scripts/build.sh
-```
-* To run the unit tests:
-```sh
-    $ ./scripts/run_tests.sh
+$ ./scripts/venv.sh     # Creates or starts the python virtual environment required to build and run tests
+$ ./scripts/setup.sh    # Installs tools required to build and run this project
+$ ./scripts/build.sh    # Builds the library
+$ ./scripts/test.sh     # Runs the tests
+$ ./scripts/cleanup.sh  # Removes build artifacts
 ```
 
-## Contributing:
-#### Coding standards:
-* See: https://github.com/lefticus/cppbestpractices
+### Building:
+- [Optional] Consider running the `./scripts/setup.sh` script to install tools required for building.
+- To build, this project relies on the [conan package manager](https://docs.conan.io/1/introduction.html) and [meson](https://mesonbuild.com/).
+- The virtual environment needs to be created and the user needs to have activated this virtual environment before this library can be built.
+```bash
+# create or activate python virtual env
+$ source ./scripts/venv.sh
+
+# build the library and tests
+$ ./scripts/build.sh
+```
+
+### Testing:
+- The unit testing framework used is [doctest](https://github.com/doctest/doctest)
+- To run the tests:
+```bash
+$ ./scripts/test.sh
+```
+
+### Example:
+- There is an example of how to send an email with attachments under `./examples/send_attachments.cpp`.
+- Fill in the credentials and you should be good to go!
+- To run the example:
+```bash
+$ ./.conan/examples/examples
+```
+
+### Clean up:
+- Remove all build artifacts:
+```bash
+$ ./scripts/cleanup.sh
+```
