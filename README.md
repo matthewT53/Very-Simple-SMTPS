@@ -47,13 +47,13 @@ using namespace smtp;
 
 int main(void) {
   EmailParams params{
-      "gmail_account@gmail.com",                                                     // smtp username
-      "google_app_password",                                                     // smtp password
-      "smtps://smtp.gmail.com:465",               // smtp server
-      "target@gmail.com",                                                 // to
-      "gmail_account@gmail.com",                                               // from
-      "",                                                                  // cc
-      "Testing sending attachments",                                       // subject
+      "gmail_account@gmail.com",         // smtp username
+      "google_app_password",             // smtp password
+      "smtps://smtp.gmail.com:465",      // smtp server
+      "target@gmail.com",                // to
+      "gmail_account@gmail.com",         // from
+      "",                                // cc
+      "Testing sending attachments",     // subject
       "Hey listen friend here are some attachments for you to play with!", // body
   };
   Email e{params};
