@@ -12,7 +12,7 @@ smtp_srcs = [
 ]
 
 # incdir comes from the meson build in the ./ directory
-smtp_lib = shared_library(
+smtp_lib = library(
     'smtp_lib',
     smtp_srcs,
     include_directories : incdir,
