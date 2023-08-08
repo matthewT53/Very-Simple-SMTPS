@@ -3,7 +3,6 @@
 */
 
 #include "attachment/attachment.hpp"
-#include "date_time/date_time_now.hpp"
 #include "email/email.hpp"
 
 using namespace smtp;
