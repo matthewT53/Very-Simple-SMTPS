@@ -19,4 +19,5 @@ smtp_lib = library(
     dependencies : curl_dep,
     cpp_args : base_cpp_args,
     link_args: base_linker_args,
+    install: true,
 )
