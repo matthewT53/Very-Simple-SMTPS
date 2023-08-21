@@ -8,7 +8,6 @@
 
 #include "date_time/date_time_now.hpp"
 #include "email/email.hpp"
-#include "mime/mime.hpp"
 
 class DateTimeStatic : public smtp::DateTime {
 public:
