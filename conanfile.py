@@ -3,7 +3,7 @@ from conan.tools.meson import MesonToolchain, Meson
 
 class VerySimpleSMTPSConan(ConanFile):
     generators = "PkgConfigDeps"
-    settings = "os", "compiler", "build_type"
+    settings = "os", "arch", "compiler", "build_type"
     options = {"shared": [True, False]}
     default_options = {"shared": False}
 

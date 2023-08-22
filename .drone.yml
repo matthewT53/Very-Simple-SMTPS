@@ -14,5 +14,5 @@ steps:
       - chmod u+x ./scripts/venv.sh
       - . ./scripts/venv.sh
       - conan profile detect
-      - chmod u+x ./scripts/build.sh ; ./scripts/build.sh
+      - chmod u+x ./scripts/build.sh ; ./scripts/build.sh release
       - chmod u+x ./scripts/test.sh ; ./scripts/test.sh
