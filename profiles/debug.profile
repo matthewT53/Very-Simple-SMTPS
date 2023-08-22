@@ -9,4 +9,4 @@ compiler.version=10
 os=Linux
 
 [options]
-shared=False
+shared=True

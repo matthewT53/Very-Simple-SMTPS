@@ -21,10 +21,8 @@ static std::string getLargeData() {
   return Base64::Base64Encode(s);
 }
 
-static const std::string kSmallData = Base64::Base64Encode("This is some test data for the file.");
-static const std::string kBinaryData = Base64::Base64Encode(
-    "\x90\x12\x87\x85\x43\x65\x10\x12\x65\x90\x34\x23\x25\x65\x41\x42\x43\xf9");
-static const std::string kLargeBinaryData = getLargeData();
+static const std::string &kSmallData = "VGhpcyBpcyBzb21lIHRlc3QgZGF0YSBmb3IgdGhlIGZpbGUu";
+static const std::string &kBinaryData = "kBKHhUNlEBJlkDQjJWVBQkP5";
 
 TEST_SUITE("Mime tests") {
   TEST_CASE("Basic use test") {
@@ -175,6 +173,7 @@ TEST_SUITE("Mime tests") {
 
   TEST_CASE("Very large attachment test") {
     const std::string &bin_filename = "/path/large.bin";
+    const std::string &kLargeBinaryData = getLargeData();
 
     smtp::Mime m("test_user_agent");
     m.addAttachment(bin_filename, kLargeBinaryData);

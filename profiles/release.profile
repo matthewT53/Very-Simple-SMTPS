@@ -8,4 +8,4 @@ compiler.version=10
 os=Linux
 
 [options]
-shared=True
+shared=False
