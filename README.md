@@ -40,9 +40,9 @@ This is still a work in progress. Submitted a PR for this [here](https://github.
 ### Download a release:
 Grab the latest release from [here](https://github.com/matthewT53/Very-Simple-SMTPS/releases/tag/v1.0.0).
 
-Build it using the instructions below.
+You can build a release version of this library by following the instructions [below](#how-to-build).
 
-Copy over the include folder into your own project and copy either the `libsmtp_lib.so` or `libsmtp_lib.a` library file under `.conan/src` into your own project and link with it.
+Copy over the `include` folder into your own project and copy either the `libsmtp_lib.so` or `libsmtp_lib.a` library file that was built under `.conan/src` into your own project and link with it. Best of luck!
 
 ### Example usage:
 ```c++
@@ -87,6 +87,13 @@ $ ./scripts/build.sh    # Builds the library
 $ ./scripts/test.sh     # Runs the tests
 $ ./scripts/cleanup.sh  # Removes build artifacts
 ```
+
+### Build profiles:
+This library can be built in either release mode or debug mode and can be built as a shared or static library.
+
+To switch between `shared` or `static` builds, the build profiles under `./profiles` can be modified by setting the `shared` variable under **[options]** to `False` or `True`.
+
+The steps below will show you how to build in either `debug` or `release` mode.
 
 ### Building:
 - [Optional] Consider running the `./scripts/setup.sh` script to install tools required for building.
