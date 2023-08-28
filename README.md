@@ -35,8 +35,14 @@ This library currently only supports the `LOGIN/PLAIN` SMTP authentication metho
 This library can be integrated into your project by using the `conan package manager` or by downloading a release and copying this library's code into your project.
 
 ### Conancenter:
+This is still a work in progress. Submitted a PR for this [here](https://github.com/conan-io/conan-center-index/pull/19398)
 
 ### Download a release:
+Grab the latest release from [here](https://github.com/matthewT53/Very-Simple-SMTPS/releases/tag/v1.0.0).
+
+Build it using the instructions below.
+
+Copy over the include folder into your own project and copy either the `libsmtp_lib.so` or `libsmtp_lib.a` library file under `.conan/src` into your own project and link with it.
 
 ### Example usage:
 ```c++
