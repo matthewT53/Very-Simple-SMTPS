@@ -96,8 +96,11 @@ $ ./scripts/cleanup.sh  # Removes build artifacts
 # create or activate python virtual env
 $ source ./scripts/venv.sh
 
-# build the library and tests
+# build the library and tests in DEBUG mode by default
 $ ./scripts/build.sh
+
+# build the library and tests in RELEASE mode
+$ ./scripts/build.sh release
 ```
 
 ### Testing:
