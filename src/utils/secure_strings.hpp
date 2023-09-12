@@ -28,7 +28,7 @@ public:
   SecureAllocator() = default;
   ~SecureAllocator() = default;
 
-  template <class U> SecureAllocator(const SecureAllocator<U> &other) {}
+  template <class U> explicit SecureAllocator(const SecureAllocator<U> &) {}
 
   pointer allocate(size_type num_objects) {
     if (num_objects > (max_size() / sizeof(T)))
@@ -36,7 +36,7 @@ public:
     return static_cast<pointer>(new value_type[num_objects]);
   }
 
-  pointer allocate(size_type num_objects, const_void_pointer hint) { return allocate(num_objects); }
+  pointer allocate(size_type num_objects, const_void_pointer) { return allocate(num_objects); }
 
   void deallocate(pointer p, size_type num_objects) {
     std::memset(p, 0x0, num_objects);

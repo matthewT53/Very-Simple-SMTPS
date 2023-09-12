@@ -13,10 +13,6 @@ TEST_SUITE("Secure strings") {
     void *ptr = password->data();
     CHECK(std::memcmp(password->data(), expected.data(), expected.size()) == 0);
 
-    int len = static_cast<int>(expected.size());
-    char arr[len] = {0x0};
-    std::memset(arr, 0x0, len);
-
     delete password;
 
     // Ensure that each byte is different at this memory location and that the
