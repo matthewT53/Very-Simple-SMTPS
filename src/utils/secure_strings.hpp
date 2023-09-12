@@ -28,7 +28,7 @@ public:
   SecureAllocator() = default;
   ~SecureAllocator() = default;
 
-  template <class U> SecureAllocator(const SecureAllocator<U> &) {}
+  template <class U> explicit SecureAllocator(const SecureAllocator<U> &) {}
 
   pointer allocate(size_type num_objects) {
     if (num_objects > (max_size() / sizeof(T)))
