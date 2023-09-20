@@ -46,6 +46,16 @@ public:
   size_type max_size() const { return std::numeric_limits<size_type>::max(); }
 };
 
+template <typename T, typename U>
+constexpr bool operator==(const SecureAllocator<T> &, const SecureAllocator<U> &) noexcept {
+  return true;
+}
+
+template <typename T, typename U>
+constexpr bool operator!=(const SecureAllocator<T> &, const SecureAllocator<U> &) noexcept {
+  return false;
+}
+
 using secure_string = std::basic_string<char, std::char_traits<char>, SecureAllocator<char>>;
 
 } // namespace smtp
