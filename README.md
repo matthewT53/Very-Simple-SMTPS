@@ -35,7 +35,16 @@ This library currently only supports the `LOGIN/PLAIN` SMTP authentication metho
 This library can be integrated into your project by using the `conan package manager` or by downloading a release and copying this library's code into your project.
 
 ### Conancenter:
-This is still a work in progress. Submitted a PR for this [here](https://github.com/conan-io/conan-center-index/pull/19398)
+Add the following line into your conanfile.txt:
+
+```config
+[requires]
+very-simple-smtps/1.0.0
+```
+
+This package can be installed into the project with: `conan install conanfile.txt --build=missing`
+
+More info can be found on the [conan-center package page](https://conan.io/center/recipes/very-simple-smtps?version=1.0.0).
 
 ### Download a release:
 Grab the latest release from [here](https://github.com/matthewT53/Very-Simple-SMTPS/releases/tag/v1.0.0).
